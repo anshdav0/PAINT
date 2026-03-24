@@ -1,0 +1,152 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --brdrshapes: rgb(127, 157, 148);
+    --bgshapes: bisque;
+    --brdrbtnhov: black;
+    --bg: white;
+    --bgcolor: antiquewhite;
+    --slidconhoverborclr: rgb(194, 174, 150);
+    --bgruntrack: rgb(248, 170, 141);
+    --bgsliderthumb: rgb(240, 72, 10);
+    --words: red;
+    --pop: 1.05;
+}
+
+[data-theme="dark"] {
+    --brdrshapes: rgb(3, 160, 113);
+    --bgshapes: rgb(240, 136, 9);
+    --brdrbtnhov: white;
+    --bg: black;
+    --bgcolor: rgb(65, 42, 13);
+    --slidconhoverborclr: rgb(141, 85, 18);
+    --bgruntrack: rgb(235, 85, 31);
+    --bgsliderthumb: rgb(238, 185, 166);
+    --words: rgb(246, 240, 240);
+    --pop: 0.95;
+}
+
+body {
+    overflow: hidden;
+    touch-action: none;
+}
+
+canvas {
+    display: block;
+    background: var(--bg)
+}
+
+.shapes {
+    position: fixed;
+    padding: 0.25rem;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10;
+    border: 0.1rem solid var(--brdrshapes);
+    border-radius: 0.5rem;
+    background-color: var(--bgshapes);
+    opacity: 0.6;
+    align-items: center;
+    display: flex;
+    gap: 0.2rem;
+    border-style: groove;
+    flex-direction: column;
+}
+
+.but {
+    margin: 0.1rem;
+    border-color: var(--bgshapes);
+    padding-right: 0.1rem;
+    padding-left: 0.1rem;
+    border-radius: 0.2rem;
+    align-items: center;
+    width: 100%;
+    transition: transform 0.1s, filter 0.1s;
+}
+.but:hover {
+    filter: brightness(0.9);
+    border-color: var(--brdrbtnhov);
+    transform: scale(1.05);
+}
+
+.color {
+    position: fixed;
+    padding: 0.25rem;
+    top: 1rem;
+    right: 1rem;
+    border: 0.1rem solid var(--bgshapes);;
+    background-color: var(--bgcolor);
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    border-style: groove;
+}
+
+.colorbt {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0.1rem solid var(--bgshapes);
+    padding: 0.5rem;
+    top: 1rem;
+    z-index: 10;
+    cursor:grab;
+    align-items: center;
+    transition: transform 0.1s, filter 0.1s;
+}
+
+.colorbt:hover {
+    border-color: var(--brdrbtnhov);
+    transform: scale(var(--pop));
+}
+
+.slidercontainer {
+    position: fixed;
+    bottom: 2rem;
+    padding: 0.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background-color: var(--bgcolor);
+    border-radius: 0.9rem;
+    border-color: var(--bgshapes);
+    border-style: groove;
+    align-items: center;
+}
+
+.slidercontainer:hover {
+    border-color: var(--slidconhoverborclr);
+}
+#widthofline {
+    -webkit-appearance: none;
+}
+
+#widthofline::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 100%;
+    background-color: var(--bgsliderthumb);
+    cursor: pointer;
+}
+#widthofline::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    background-color: var(--bgruntrack);
+    border-radius: 20rem;
+}
+#widthofline {
+    -webkit-appearance: none;
+    background: transparent;
+}
+
+#lable {
+    color: red;
+}
+
+
+#colorPicker {
+    padding: 0;
+}

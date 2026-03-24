@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Paint</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="fashion.css">
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="shapes">
+        <button class="but" title="Click and Drag" onclick="drawRect()">Rectangle</button>
+        <button class="but" title="Click and Drag" onclick="drawCir()">Circle</button>
+        <button class="but" title="Click 3 points to draw, don't drag" onclick="drawTri()">Triangle</button>
+        <button class="but" title="Click and Drag" onclick="drawStok()">Brush 1</button>
+        <button class="but" title="Click and Drag Slowly" onclick="drawStok2()">Brush 2</button>
+        <button class="but" title="Click and Type" onclick="txt()">Text</button>
+        <button class="but" title="Work in progress" onclick="selection()">Select Tool</button>
+        <button class="but" onclick="fillcolr()">FillColor</button>
+        <button class="but" onclick="save()">Save</button>
+        <button class="but" onclick="reset()">Reset</button>
+        <button class="but" onclick="theme()">Theme</button>
+    </div>
+    
+    <div class="color">
+        <button class="colorbt" style="background: red;" onclick="setCol('red')"></button>
+        <button class="colorbt" style="background: green;" onclick="setCol('green')"></button>
+        <button class="colorbt" style="background: black;" onclick="setCol('black')"></button>
+        <button class="colorbt" style="background: blue;" onclick="setCol('blue')"></button>
+        <button class="colorbt" style="background: white;" onclick="setCol('white')"></button>
+        <button class="colorbt" style="background: lime;" onclick="setCol('lime')"></button>
+        <input type="color" id="colorPicker" class="colorbt" value="#12e3e2">
+    </div>
+    <div class="slidercontainer">
+    <input type="range" class="slider" id="widthofline" min="1" max="20" value="2">
+    <span id="lable">BrushSize</span>
+    </div>
+    <input id="textInput" type="text" style="position: fixed; opacity: 0; pointer-events: none;">
+    <script src="paintfc.js"></script>
+    <script src="animation.js"></script>
+</body>
+</html>
