@@ -72,6 +72,11 @@ canvas {
     transform: scale(1.05);
 }
 
+.but.active {
+    border: 0.25rem solid var(--brdrbtnhov);
+    background-color: var(--bgsliderthumb);
+}
+
 .color {
     position: fixed;
     padding: 0.25rem;
@@ -87,7 +92,7 @@ canvas {
 }
 
 .colorbt {
-    width: 1.5rem;
+    width: 2rem;
     height: 1.5rem;
     border: 0.1rem solid var(--bgshapes);
     padding: 0.5rem;

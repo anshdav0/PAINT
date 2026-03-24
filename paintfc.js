@@ -31,6 +31,7 @@ document.getElementById("widthofline").addEventListener("input", (e) => {
 function setCol(color) {
     primColor = color;
     ctx.strokeStyle = primColor;
+    document.getElementById("Curcol").style.backgroundColor = primColor;
 }
 
 function draw() {

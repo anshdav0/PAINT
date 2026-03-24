@@ -6,9 +6,20 @@ let frame;
 function drawRect() {
     if(itemchosen === "rec"){
         itemchosen = "";
+        let b = document.getElementById("rect");
+        b.classList.remove("active");
     }
     else{
         itemchosen = "rec";
+        let b = document.getElementById("rect");
+        b.classList.add("active");
+        document.getElementById("cir").classList.remove("active");
+        document.getElementById("tri").classList.remove("active");
+        document.getElementById("brs1").classList.remove("active");
+        document.getElementById("brs2").classList.remove("active");
+        document.getElementById("txt").classList.remove("active");
+        document.getElementById("sele").classList.remove("active");
+        document.getElementById("fill").classList.remove("active");
     }
 
     if(itemchosen === "rec") {
@@ -18,6 +29,8 @@ function drawRect() {
         canvas.style.cursor = "default";
     }
 }
+
+
 
 canvas.addEventListener("mousedown", (e) => {
     if (itemchosen !== "rec") return;
@@ -71,9 +84,20 @@ let scircenx, scirceny;
 function drawCir() {
     if(itemchosen === "cir"){
         itemchosen = "";
+        let b = document.getElementById("cir");
+        b.classList.remove("active");
     }
     else{
         itemchosen = "cir";
+        let b = document.getElementById("cir");
+        b.classList.add("active");
+        document.getElementById("rect").classList.remove("active");
+        document.getElementById("tri").classList.remove("active");
+        document.getElementById("brs1").classList.remove("active");
+        document.getElementById("brs2").classList.remove("active");
+        document.getElementById("txt").classList.remove("active");
+        document.getElementById("sele").classList.remove("active");
+        document.getElementById("fill").classList.remove("active");
     }
 
     if(itemchosen === "cir") {
@@ -131,9 +155,20 @@ canvas.addEventListener("mouseup", (e) => {
 function selection() {
     if(itemchosen === "sel"){
         itemchosen = "";
+        let b = document.getElementById("sele");
+        b.classList.remove("active");
     }
     else{
         itemchosen = "sel";
+        let b = document.getElementById("sele");
+        b.classList.add("active");
+        document.getElementById("cir").classList.remove("active");
+        document.getElementById("tri").classList.remove("active");
+        document.getElementById("brs1").classList.remove("active");
+        document.getElementById("brs2").classList.remove("active");
+        document.getElementById("txt").classList.remove("active");
+        document.getElementById("rect").classList.remove("active");
+        document.getElementById("fill").classList.remove("active");
     }
     canvas.style.cursor = "default";
 }
@@ -147,9 +182,20 @@ canvas.addEventListener("click", (e) => {
 function fillcolr() {
     if(itemchosen === "filc"){
         itemchosen = "";
+        let b = document.getElementById("fill");
+        b.classList.remove("active");
     }
     else{
         itemchosen = "filc";
+        let b = document.getElementById("fill");
+        b.classList.add("active");
+        document.getElementById("cir").classList.remove("active");
+        document.getElementById("tri").classList.remove("active");
+        document.getElementById("brs1").classList.remove("active");
+        document.getElementById("brs2").classList.remove("active");
+        document.getElementById("txt").classList.remove("active");
+        document.getElementById("sele").classList.remove("active");
+        document.getElementById("rect").classList.remove("active");
     }
 
     canvas.style.cursor = "default";
@@ -176,9 +222,20 @@ let i=0;
 function drawTri() {
     if(itemchosen === "tri"){
         itemchosen = "";
+        let b = document.getElementById("tri");
+        b.classList.remove("active");
     }
     else{
         itemchosen = "tri";
+        let b = document.getElementById("tri");
+        b.classList.add("active");
+        document.getElementById("cir").classList.remove("active");
+        document.getElementById("rect").classList.remove("active");
+        document.getElementById("brs1").classList.remove("active");
+        document.getElementById("brs2").classList.remove("active");
+        document.getElementById("txt").classList.remove("active");
+        document.getElementById("sele").classList.remove("active");
+        document.getElementById("fill").classList.remove("active");
     }
 
     if(itemchosen === "tri") {
@@ -275,9 +332,20 @@ let isBrushing = false;
 function drawStok() {
     if(itemchosen === "strk"){
         itemchosen = "";
+        let b = document.getElementById("brs1");
+        b.classList.remove("active");
     }
     else{
         itemchosen = "strk";
+        let b = document.getElementById("brs1");
+        b.classList.add("active");
+        document.getElementById("cir").classList.remove("active");
+        document.getElementById("tri").classList.remove("active");
+        document.getElementById("rect").classList.remove("active");
+        document.getElementById("brs2").classList.remove("active");
+        document.getElementById("txt").classList.remove("active");
+        document.getElementById("sele").classList.remove("active");
+        document.getElementById("fill").classList.remove("active");
     }
 
     if(itemchosen === "strk") {
@@ -344,9 +412,20 @@ canvas.addEventListener("mouseup", (e) => {
 function drawStok2() {
     if(itemchosen === "strk2"){
         itemchosen = "";
+        let b = document.getElementById("brs2");
+        b.classList.remove("active");
     }
     else{
         itemchosen = "strk2";
+        let b = document.getElementById("brs2");
+        b.classList.add("active");
+        document.getElementById("cir").classList.remove("active");
+        document.getElementById("tri").classList.remove("active");
+        document.getElementById("brs1").classList.remove("active");
+        document.getElementById("rect").classList.remove("active");
+        document.getElementById("txt").classList.remove("active");
+        document.getElementById("sele").classList.remove("active");
+        document.getElementById("fill").classList.remove("active");
     }
 
     if(itemchosen === "strk2") {
@@ -418,9 +497,20 @@ let x1, y1;
 function txt() {
     if(itemchosen === "txt"){
         itemchosen = "";
+        let b = document.getElementById("txt");
+        b.classList.remove("active");
     }
     else{
         itemchosen = "txt";
+        let b = document.getElementById("txt");
+        b.classList.add("active");
+        document.getElementById("cir").classList.remove("active");
+        document.getElementById("tri").classList.remove("active");
+        document.getElementById("brs1").classList.remove("active");
+        document.getElementById("brs2").classList.remove("active");
+        document.getElementById("rect").classList.remove("active");
+        document.getElementById("sele").classList.remove("active");
+        document.getElementById("fill").classList.remove("active");
     }
 
     if(itemchosen === "txt") {
