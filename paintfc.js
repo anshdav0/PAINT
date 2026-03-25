@@ -102,10 +102,6 @@ function drawElement(el) {
         for (let i = 1; i < el.points.length; i++) {
             ctx.lineTo(el.points[i].x, el.points[i].y);
             ctx.lineTo(el.points[i].x, el.points[i].y);
-            ctx.lineTo(el.points[i].x + 2, el.points[i].y + 2);
-            ctx.lineTo(el.points[i].x + 1, el.points[i].y + 1);
-            ctx.lineTo(el.points[i].x - 1, el.points[i].y - 1);
-            ctx.lineTo(el.points[i].x - 2, el.points[i].y - 2);
         }
         ctx.stroke();
     }
@@ -194,8 +190,10 @@ function triarea(x1,y1,x2,y2,x3,y3) {
 
 
 function save() {
-    let load = JSON.stringify(history[undoptr]);
-    localStorage.setItem("Load", load);
+    if (undoptr >= 0){
+        let load = JSON.stringify(history[undoptr]);
+        localStorage.setItem("Load", load);
+    }
 }
 
 function reset() {
@@ -220,18 +218,24 @@ function theme() {
     if (html.getAttribute("data-theme") === "dark") {
         html.removeAttribute("data-theme");
         for (let el of history[undoptr]) {
-            if (el.boundcolor === "white") {
-                el.boundcolor = "black";
+            if (el.type !== "stroke2") {
+                if (el.boundcolor === "white") {
+                    el.boundcolor = "black";
+                }
             }
+            else {el.boundcolor = "white";}
         }
         draw();
     }
     else {
         html.setAttribute("data-theme", "dark");
         for (let el of history[undoptr]) {
-            if (el.boundcolor === "black") {
-                el.boundcolor = "white";
+            if (el.type !== "stroke2"){
+                if (el.boundcolor === "black") {
+                    el.boundcolor = "white";
+                }
             }
+            else {el.boundcolor = "black";}
         }
         draw();
     }

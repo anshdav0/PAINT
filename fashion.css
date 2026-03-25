@@ -14,6 +14,8 @@
     --bgsliderthumb: rgb(240, 72, 10);
     --words: red;
     --pop: 1.05;
+    --gg: rgb(221, 68, 68);
+    --op: 1;
 }
 
 [data-theme="dark"] {
@@ -27,6 +29,8 @@
     --bgsliderthumb: rgb(238, 185, 166);
     --words: rgb(246, 240, 240);
     --pop: 0.95;
+    --gg: rgb(233, 233, 233);
+    --op: 0.7;
 }
 
 body {
@@ -58,13 +62,15 @@ canvas {
 
 .but {
     margin: 0.1rem;
-    border-color: var(--bgshapes);
+    border-color: var(--brdrbtnhov);
+    background-color: var(--gg);
     padding-right: 0.1rem;
     padding-left: 0.1rem;
     border-radius: 0.2rem;
     align-items: center;
     width: 100%;
     transition: transform 0.1s, filter 0.1s;
+    color: var(--bg)
 }
 .but:hover {
     filter: brightness(0.9);
@@ -120,6 +126,7 @@ canvas {
     border-color: var(--bgshapes);
     border-style: groove;
     align-items: center;
+    opacity: var(--op);
 }
 
 .slidercontainer:hover {
@@ -147,8 +154,8 @@ canvas {
     background: transparent;
 }
 
-#lable {
-    color: red;
+.lable {
+    color: var(--words);
 }
 
 
