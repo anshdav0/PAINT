@@ -1,6 +1,7 @@
 let itemchosen = "";
 let srecx, srecy;
 let frame;
+let elel = null;
 
 
 function drawRect() {
@@ -20,6 +21,7 @@ function drawRect() {
         document.getElementById("txt").classList.remove("active");
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
+        document.getElementById("remv").classList.remove("active");
     }
 
     if(itemchosen === "rec") {
@@ -98,6 +100,7 @@ function drawCir() {
         document.getElementById("txt").classList.remove("active");
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
+        document.getElementById("remv").classList.remove("active");
     }
 
     if(itemchosen === "cir") {
@@ -169,18 +172,158 @@ function selection() {
         document.getElementById("txt").classList.remove("active");
         document.getElementById("rect").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
+        document.getElementById("remv").classList.remove("active");
     }
-    canvas.style.cursor = "default";
+    if(itemchosen === "sel") {
+        canvas.style.cursor = "grab";
+    }
+    else {
+        canvas.style.cursor = "default";
+    }
 }
 
-canvas.addEventListener("click", (e) => {
+canvas.addEventListener("mousedown", (e) => {
     if (itemchosen !== "sel") return;
     console.log(identify(e.offsetX, e.offsetY));
+    if (identify(e.offsetX, e.offsetY) === null) {return;}
+    elel = renders[identify(e.offsetX, e.offsetY)];
+    canvas.style.cursor = "grabbing";
+    renders.splice(identify(e.offsetX, e.offsetY), 1);
+    console.log(elel);
+    history.splice(undoptr + 1);
+    undoptr++;
+    history.push(JSON.parse(JSON.stringify(renders)));
+    draw();
+    history.pop();
+    undoptr--;
+    frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
 });
+
+addEventListener("mousemove", (e) => {
+    if (itemchosen !== "sel") {return;}
+    if (!frame) return;
+    canvas.style.cursor = "grabbing";
+    if (elel.type === "cir"){
+    ctx.putImageData(frame, 0, 0);
+    ctx.beginPath();
+        ctx.strokeStyle = elel.boundcolor;
+        ctx.lineWidth = elel.lineWid;
+        ctx.arc(e.offsetX, e.offsetY, elel.radius , 0, Math.PI * 2);
+        if (elel.fillcolor) {
+            ctx.fillStyle = elel.fillcolor;
+            ctx.fill();
+        }
+        ctx.stroke();
+    }
+
+    else if (elel.type === "rect"){
+        ctx.putImageData(frame, 0, 0);
+        ctx.lineWidth = elel.lineWid;
+            if (elel.fillcolor) {
+                ctx.fillStyle = elel.fillcolor;
+                ctx.fillRect(e.offsetX, e.offsetY, elel.width, elel.height);
+            }
+        ctx.strokeStyle = elel.boundcolor;
+        ctx.strokeRect(e.offsetX, e.offsetY, elel.width, elel.height);
+    }
+
+    else if (elel.type === "tri"){
+        ctx.putImageData(frame, 0, 0);
+        ctx.beginPath();
+        ctx.strokeStyle = elel.boundcolor;
+        ctx.lineWidth = elel.lineWid;
+        ctx.moveTo(e.offsetX, e.offsetY);
+        ctx.lineTo(elel.x2 - (elel.x1 - e.offsetX), elel.y2 - (elel.y1 - e.offsetY));
+        ctx.lineTo(elel.x3 - (elel.x1 - e.offsetX), elel.y3 - (elel.y1 - e.offsetY));
+        ctx.closePath();
+        if (elel.fillcolor) {
+            ctx.fillStyle = elel.fillcolor;
+            ctx.fill();
+        }
+        ctx.stroke();
+    }
+})
+
+addEventListener("mouseup", (e) => {
+    if (itemchosen !== "sel") return;
+    if (!frame) return;
+    canvas.style.cursor = "grab";
+    ctx.putImageData(frame, 0, 0);
+    
+    if (elel.type === "cir") {
+        const el = {
+            type: "cir",
+            x: e.offsetX,
+            y: e.offsetY,
+            radius: elel.radius,
+            centrex: e.offsetX,
+            centrey: e.offsetY,
+            lineWid: elel.lineWid,
+            boundcolor: elel.boundcolor,
+            fillcolor: elel.fillcolor,
+        }
+
+        history.splice(undoptr + 1);
+        renders.push(el);
+        undoptr++;
+        history.push(JSON.parse(JSON.stringify(renders)));
+        draw();
+        frame = null;
+    }
+
+    else if (elel.type === "rect") {
+        const el = {
+            type: "rect",
+            x: e.offsetX,
+            y: e.offsetY,
+            width: elel.width,
+            height: elel.height,
+            lineWid: elel.lineWid,
+            centrex: e.offsetX + (elel.width) / 2,
+            centrey: e.offsetY + (elel.height) / 2,
+            boundcolor: elel.boundcolor,
+            fillcolor: elel.fillcolor,
+        }
+
+        history.splice(undoptr + 1);
+        renders.push(el);
+        undoptr++;
+        history.push(JSON.parse(JSON.stringify(renders)));
+        draw();
+        frame = null;
+    }
+
+    else if (elel.type === "tri") {
+        const el = {
+            type: "tri",
+            x1: e.offsetX,
+            y1: e.offsetY,
+            x2: elel.x2 - (elel.x1 - e.offsetX),
+            y2: elel.y2 - (elel.y1 - e.offsetY),
+            x3: elel.x3 - (elel.x1 - e.offsetX),
+            y3: elel.y3 - (elel.y1 - e.offsetY),
+            centrex: (trix1+trix2+trix3)/3,
+            centrey: (triy1+triy2+triy3)/3,
+            lineWid: elel.lineWid,
+            boundcolor: elel.boundcolor,
+            fillcolor: elel.fillcolor,
+        }
+
+        history.splice(undoptr + 1);
+        renders.push(el);
+        undoptr++;
+        history.push(JSON.parse(JSON.stringify(renders)));
+        draw();
+        frame = null;
+    }
+     
+    
+})
 
 
 function fillcolr() {
-    if(itemchosen === "filc"){
+    if (itemchosen === "filc"){
         itemchosen = "";
         let b = document.getElementById("fill");
         b.classList.remove("active");
@@ -196,16 +339,21 @@ function fillcolr() {
         document.getElementById("txt").classList.remove("active");
         document.getElementById("sele").classList.remove("active");
         document.getElementById("rect").classList.remove("active");
+        document.getElementById("remv").classList.remove("active");
     }
-
-    canvas.style.cursor = "default";
+    if(itemchosen === "filc") {
+        canvas.style.cursor = "url('bb.cur'), auto";
+    }
+    else {
+        canvas.style.cursor = "default";
+    }
 }
 
 canvas.addEventListener("click", (e) => {
     if (itemchosen !== "filc") {return;}
     let ele = identify(e.offsetX, e.offsetY);
     if (ele === null) {return;}
-    history[undoptr][ele].fillcolor = primColor;
+   // history[undoptr][ele].fillcolor = primColor;
     renders[ele].fillcolor = primColor;
      
     history.splice(undoptr + 1);
@@ -236,6 +384,7 @@ function drawTri() {
         document.getElementById("txt").classList.remove("active");
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
+        document.getElementById("remv").classList.remove("active");
     }
 
     if(itemchosen === "tri") {
@@ -346,6 +495,7 @@ function drawStok() {
         document.getElementById("txt").classList.remove("active");
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
+        document.getElementById("remv").classList.remove("active");
     }
 
     if(itemchosen === "strk") {
@@ -426,10 +576,11 @@ function drawStok2() {
         document.getElementById("txt").classList.remove("active");
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
+        document.getElementById("remv").classList.remove("active");
     }
 
     if(itemchosen === "strk2") {
-        canvas.style.cursor = "crosshair";
+        canvas.style.cursor = "url('eraser.cur'), cell";
     }
     else {
         canvas.style.cursor = "default";
@@ -450,15 +601,11 @@ canvas.addEventListener("mousemove", (e) => {
     
     if (currentStroke.length > 1) {
         ctx.beginPath();
-        ctx.strokeStyle = primColor;
-        ctx.lineWidth = linewid;
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = linewid * 3;
         ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
         for (let i = 1; i < currentStroke.length; i++) {
             ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
-            ctx.lineTo(currentStroke[i].x + 2, currentStroke[i].y + 2);
-            ctx.lineTo(currentStroke[i].x + 1, currentStroke[i].y + 1);
-            ctx.lineTo(currentStroke[i].x - 1, currentStroke[i].y - 1);
-            ctx.lineTo(currentStroke[i].x - 2, currentStroke[i].y - 2);
         }
         ctx.stroke();
     }
@@ -473,8 +620,8 @@ canvas.addEventListener("mouseup", (e) => {
     const el = {
         type: "stroke2",
         points: currentStroke,
-        boundcolor: primColor,
-        lineWid: linewid,
+        boundcolor: "white",
+        lineWid: linewid * 3,
         layer: 0,
     };
      
@@ -511,6 +658,7 @@ function txt() {
         document.getElementById("rect").classList.remove("active");
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
+        document.getElementById("remv").classList.remove("active");
     }
 
     if(itemchosen === "txt") {
@@ -555,4 +703,49 @@ textInput.addEventListener("keydown", (e) => {
     textInput.style.pointerEvents = "none";
     frame = null;
     i = 0;
+});
+
+
+
+
+
+
+
+
+function remv() {
+    if(itemchosen === "remv"){
+        itemchosen = "";
+        let b = document.getElementById("remv");
+        b.classList.remove("active");
+    }
+    else{
+        itemchosen = "remv";
+        let b = document.getElementById("remv");
+        b.classList.add("active");
+        document.getElementById("cir").classList.remove("active");
+        document.getElementById("tri").classList.remove("active");
+        document.getElementById("brs1").classList.remove("active");
+        document.getElementById("brs2").classList.remove("active");
+        document.getElementById("txt").classList.remove("active");
+        document.getElementById("rect").classList.remove("active");
+        document.getElementById("fill").classList.remove("active");
+    }
+    
+    if(itemchosen === "remv") {
+        canvas.style.cursor = "url('Delete.cur'), auto";
+    }
+    else {
+        canvas.style.cursor = "default";
+    }
+}
+
+canvas.addEventListener("click", (e) => {
+    if (itemchosen !== "remv") return;
+    if (identify(e.offsetX, e.offsetY) === null) {return;}
+    renders.splice(identify(e.offsetX, e.offsetY), 1);
+    history.splice(undoptr + 1);
+    undoptr++;
+    history.push(JSON.parse(JSON.stringify(renders)));
+    draw();
+
 });

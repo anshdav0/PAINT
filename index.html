@@ -12,9 +12,10 @@
         <button class="but" id="cir" title="Click and Drag" onclick="drawCir()">Circle</button>
         <button class="but" id="tri" title="Click 3 points to draw, don't drag" onclick="drawTri()">Triangle</button>
         <button class="but" id="brs1" title="Click and Drag" onclick="drawStok()">Brush 1</button>
-        <button class="but" id="brs2" title="Click and Drag Slowly" onclick="drawStok2()">Brush 2</button>
+        <button class="but" id="brs2" title="Click and Drag Slowly" onclick="drawStok2()">Eraser</button>
         <button class="but" id="txt" title="Click and Type" onclick="txt()">Text</button>
-        <button class="but" id="sele" title="Work in progress" onclick="selection()">Select Tool</button>
+        <button class="but" id="sele" title="Move shapes around" onclick="selection()">Move</button>
+        <button class="but" id="remv" title="Work in progress" onclick="remv()">Remove Shape</button>
         <button class="but" id="fill" onclick="fillcolr()">FillColor</button>
         <button class="but" onclick="save()">Save</button>
         <button class="but" onclick="reset()">Reset</button>
@@ -29,12 +30,13 @@
         <button class="colorbt" style="background: white;" onclick="setCol('white')"></button>
         <button class="colorbt" style="background: lime;" onclick="setCol('lime')"></button>
         <input type="color" id="colorPicker" class="colorbt" value="#12e3e2">
+        <span class="lable">Color</span>
         <button class="colorbt" id="Curcol" style="background: black;"></button>
-        <span>Color</span>
+        
     </div>
     <div class="slidercontainer">
     <input type="range" class="slider" id="widthofline" min="1" max="20" value="2">
-    <span id="lable">BrushSize</span>
+    <span class="lable">BrushSize</span>
     </div>
     <input id="textInput" type="text" style="position: fixed; opacity: 0; pointer-events: none;">
     <script src="paintfc.js"></script>
