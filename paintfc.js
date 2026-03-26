@@ -140,6 +140,21 @@ window.addEventListener("keydown", (e) => {
     if (e.key === "t") {
         drawTri();
     }
+    if (e.key === "b") {
+        drawStok();
+    }
+    if (e.key === "e") {
+        drawStok2();
+    }
+    if (e.key === "m") {
+        selection();
+    }
+    if (e.key === "d") {
+        remv();
+    }
+    if (e.key === "f") {
+        fillcolr();
+    }
 });
 
 

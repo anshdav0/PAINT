@@ -729,6 +729,7 @@ function remv() {
         document.getElementById("txt").classList.remove("active");
         document.getElementById("rect").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
+        document.getElementById("sele").classList.remove("active");
     }
     
     if(itemchosen === "remv") {
