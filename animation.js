@@ -2,6 +2,8 @@ let itemchosen = "";
 let srecx, srecy;
 let frame;
 let elel = null;
+let fortrix;
+let fortriy;
 
 
 function drawRect() {
@@ -46,6 +48,7 @@ canvas.addEventListener("mousemove", (e) => {
     if (!frame) return;
     ctx.putImageData(frame, 0, 0);
     ctx.lineWidth = linewid;
+    ctx.strokeStyle = primColor;
     ctx.strokeRect(srecx, srecy, e.offsetX - srecx, e.offsetY - srecy);
 });
 
@@ -65,13 +68,14 @@ canvas.addEventListener("mouseup", (e) => {
         boundcolor: primColor,
         fillcolor: null,
     }
-     
+     console.log("rect");
     history.splice(undoptr + 1);
     renders.push(el);
     undoptr++;
     history.push(JSON.parse(JSON.stringify(renders)));
     draw();
     frame = null;
+    save();
 
 });
 
@@ -124,6 +128,7 @@ canvas.addEventListener("mousemove", (e) => {
     ctx.putImageData(frame, 0, 0);
     ctx.beginPath();
     ctx.lineWidth = linewid;
+    ctx.strokeStyle = primColor;
     ctx.arc(scircenx, scirceny, Math.sqrt((e.offsetX - scircenx)**2 + (e.offsetY - scirceny)**2) , 0, Math.PI * 2);
     ctx.stroke();
 });
@@ -151,6 +156,7 @@ canvas.addEventListener("mouseup", (e) => {
     history.push(JSON.parse(JSON.stringify(renders)));
     draw();
     frame = null;
+    save();
 });
 
 
@@ -270,6 +276,7 @@ addEventListener("mouseup", (e) => {
         history.push(JSON.parse(JSON.stringify(renders)));
         draw();
         frame = null;
+        save();
     }
 
     else if (elel.type === "rect") {
@@ -292,6 +299,7 @@ addEventListener("mouseup", (e) => {
         history.push(JSON.parse(JSON.stringify(renders)));
         draw();
         frame = null;
+        save();
     }
 
     else if (elel.type === "tri") {
@@ -303,8 +311,8 @@ addEventListener("mouseup", (e) => {
             y2: elel.y2 - (elel.y1 - e.offsetY),
             x3: elel.x3 - (elel.x1 - e.offsetX),
             y3: elel.y3 - (elel.y1 - e.offsetY),
-            centrex: (trix1+trix2+trix3)/3,
-            centrey: (triy1+triy2+triy3)/3,
+            centrex: (e.offsetX+elel.x2 - (elel.x1 - e.offsetX)+elel.x3 - (elel.x1 - e.offsetX))/3,
+            centrey: (e.offsetY+elel.y2 - (elel.y1 - e.offsetY)+elel.y3 - (elel.y1 - e.offsetY))/3,
             lineWid: elel.lineWid,
             boundcolor: elel.boundcolor,
             fillcolor: elel.fillcolor,
@@ -316,6 +324,7 @@ addEventListener("mouseup", (e) => {
         history.push(JSON.parse(JSON.stringify(renders)));
         draw();
         frame = null;
+        save();
     }
      
     
@@ -360,6 +369,7 @@ canvas.addEventListener("click", (e) => {
     undoptr++;
     history.push(JSON.parse(JSON.stringify(renders)));
     draw();
+    save();
 });
 
 
@@ -439,6 +449,7 @@ canvas.addEventListener("click", (e) => {
         history.push(JSON.parse(JSON.stringify(renders)));
         draw();
         frame = null;
+        save();
         i = 0;
     }
 });
@@ -450,6 +461,7 @@ canvas.addEventListener("mousemove", (e) => {
         ctx.putImageData(frame, 0, 0);
         ctx.beginPath();
         ctx.lineWidth = linewid;
+        ctx.strokeStyle = primColor;
         ctx.moveTo(trix1, triy1);
         ctx.lineTo(e.offsetX, e.offsetY);
         ctx.stroke();
@@ -460,6 +472,7 @@ canvas.addEventListener("mousemove", (e) => {
         ctx.putImageData(frame, 0, 0);
         ctx.beginPath();
         ctx.lineWidth = linewid;
+        ctx.strokeStyle = primColor;
         ctx.moveTo(trix1, triy1);
         ctx.lineTo(trix2, triy2);
         ctx.lineTo(e.offsetX, e.offsetY);
@@ -550,6 +563,7 @@ canvas.addEventListener("mouseup", (e) => {
     frame = null;
     currentStroke = [];
     draw();
+    save();
 });
 
 
@@ -610,6 +624,32 @@ canvas.addEventListener("mousemove", (e) => {
         ctx.stroke();
     }
 });
+canvas.addEventListener("mousedown", (e) => {
+    if (itemchosen !== "strk2") return;
+    frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+});
+
+let eraserCooldown = false;
+
+canvas.addEventListener("mousemove", (e) => {
+    if (itemchosen !== "strk2") return;
+    if (!frame) return;
+    
+    if (eraserCooldown) return;
+    if (identify(e.offsetX, e.offsetY) === null) {return;}
+    ctx.putImageData(frame, 0, 0);
+    renders.splice(identify(e.offsetX, e.offsetY), 1);
+    history.splice(undoptr + 1);
+    undoptr++;
+    history.push(JSON.parse(JSON.stringify(renders)));
+    draw();
+    frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    save();
+    eraserCooldown = true;
+    setTimeout(() => {
+        eraserCooldown = false;
+    }, 500);
+});
 
 canvas.addEventListener("mouseup", (e) => {
     if (itemchosen !== "strk2") return;
@@ -632,6 +672,8 @@ canvas.addEventListener("mouseup", (e) => {
     frame = null;
     currentStroke = [];
     draw();
+    save();
+    setCol("black");
 });
 
 
@@ -689,7 +731,7 @@ textInput.addEventListener("keydown", (e) => {
         y: parseInt(textInput.style.top),
         content: textInput.value,
         font: "Arial",
-        fontSize: 1.5,
+        fontSize: linewid * 0.75,
         boundcolor: primColor,
         layer: 0,
     };
@@ -702,6 +744,7 @@ textInput.addEventListener("keydown", (e) => {
     textInput.style.opacity = "0";
     textInput.style.pointerEvents = "none";
     frame = null;
+    save();
     i = 0;
 });
 
@@ -733,20 +776,154 @@ function remv() {
     }
     
     if(itemchosen === "remv") {
-        canvas.style.cursor = "url('Delete.cur'), auto";
+        canvas.style.cursor = "grab";
     }
     else {
         canvas.style.cursor = "default";
     }
 }
 
-canvas.addEventListener("click", (e) => {
+
+canvas.addEventListener("mousedown", (e) => {
     if (itemchosen !== "remv") return;
+    console.log(identify(e.offsetX, e.offsetY));
     if (identify(e.offsetX, e.offsetY) === null) {return;}
+    elel = renders[identify(e.offsetX, e.offsetY)];
+    canvas.style.cursor = "grabbing";
     renders.splice(identify(e.offsetX, e.offsetY), 1);
+    console.log(elel);
     history.splice(undoptr + 1);
     undoptr++;
     history.push(JSON.parse(JSON.stringify(renders)));
     draw();
-
+    history.pop();
+    undoptr--;
+    frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    fortrix = Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2);
+    console.log(fortrix);
 });
+
+addEventListener("mousemove", (e) => {
+    if (itemchosen !== "remv") {return;}
+    if (!frame) return;
+    canvas.style.cursor = "grabbing";
+
+    if (elel.type === "cir"){
+    ctx.putImageData(frame, 0, 0);
+    ctx.beginPath();
+        ctx.strokeStyle = elel.boundcolor;
+        ctx.lineWidth = elel.lineWid;
+        ctx.arc(elel.centrex, elel.centrey, Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2) , 0, Math.PI * 2);
+        if (elel.fillcolor) {
+            ctx.fillStyle = elel.fillcolor;
+            ctx.fill();
+        }
+        ctx.stroke();
+    }
+
+    else if (elel.type === "rect"){
+        ctx.putImageData(frame, 0, 0);
+        ctx.lineWidth = elel.lineWid;
+            if (elel.fillcolor) {
+                ctx.fillStyle = elel.fillcolor;
+                ctx.fillRect(elel.x, elel.y, e.offsetX - elel.x, e.offsetY - elel.y);
+            }
+        ctx.strokeStyle = elel.boundcolor;
+        ctx.strokeRect(elel.x, elel.y, Math.abs(elel.x - e.offsetX), Math.abs(elel.y - e.offsetY));
+    }
+
+    else if (elel.type === "tri"){
+        ctx.putImageData(frame, 0, 0);
+        ctx.beginPath();
+        ctx.strokeStyle = elel.boundcolor;
+        ctx.lineWidth = elel.lineWid;
+        ctx.moveTo(elel.centrex + (elel.x1 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix, elel.centrey + (elel.y1 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix);
+        ctx.lineTo(elel.centrex + (elel.x2 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix, elel.centrey + (elel.y2 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix);
+        ctx.lineTo(elel.centrex + (elel.x3 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix, elel.centrey + (elel.y3 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix);
+        ctx.closePath();
+        if (elel.fillcolor) {
+            ctx.fillStyle = elel.fillcolor;
+            ctx.fill();
+        }
+        ctx.stroke();
+    }
+})
+
+addEventListener("mouseup", (e) => {
+    if (itemchosen !== "remv") return;
+    if (!frame) return;
+    canvas.style.cursor = "grab";
+    ctx.putImageData(frame, 0, 0);
+    
+    if (elel.type === "cir") {
+        const el = {
+            type: "cir",
+            x: elel.x,
+            y: elel.y,
+            radius: Math.sqrt((e.offsetX - elel.x)**2 + (e.offsetY - elel.y)**2),
+            centrex: elel.x,
+            centrey: elel.y,
+            lineWid: elel.lineWid,
+            boundcolor: elel.boundcolor,
+            fillcolor: elel.fillcolor,
+        }
+
+        history.splice(undoptr + 1);
+        renders.push(el);
+        undoptr++;
+        history.push(JSON.parse(JSON.stringify(renders)));
+        draw();
+        frame = null;
+        save();
+    }
+
+    else if (elel.type === "rect") {
+        const el = {
+            type: "rect",
+            x: elel.x,
+            y: elel.y,
+            width: Math.abs(e.offsetX - elel.x),
+            height: Math.abs(e.offsetY - elel.y),
+            lineWid: elel.lineWid,
+            centrex: elel.x + (e.offsetX - elel.x) / 2,
+            centrey: elel.y + (e.offsetY - elel.y) / 2,
+            boundcolor: elel.boundcolor,
+            fillcolor: elel.fillcolor,
+        }
+
+        history.splice(undoptr + 1);
+        renders.push(el);
+        undoptr++;
+        history.push(JSON.parse(JSON.stringify(renders)));
+        draw();
+        frame = null;
+        save();
+    }
+
+    else if (elel.type === "tri") {
+        const el = {
+            type: "tri",
+            x1: elel.centrex + (elel.x1 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
+            y1: elel.centrey + (elel.y1 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
+            x2: elel.centrex + (elel.x2 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
+            y2: elel.centrey + (elel.y2 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
+            x3: elel.centrex + (elel.x3 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
+            y3: elel.centrey + (elel.y3 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
+            centrex: elel.centrex,
+            centrey: elel.centrey,
+            lineWid: elel.lineWid,
+            boundcolor: elel.boundcolor,
+            fillcolor: elel.fillcolor,
+        }
+
+        console.log(el.centrex, el.centrey);
+
+        history.splice(undoptr + 1);
+        renders.push(el);
+        undoptr++;
+        history.push(JSON.parse(JSON.stringify(renders)));
+        draw();
+        frame = null;
+        save();
+    }
+})
