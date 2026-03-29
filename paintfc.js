@@ -46,12 +46,16 @@ function drawElement(el) {
 
     if (el.type === "rect") {
         ctx.lineWidth = el.lineWid;
+        ctx.save();
+        ctx.translate(el.centrex, el.centrey);
+        ctx.rotate(el.angle);
         if (el.fillcolor) {
             ctx.fillStyle = el.fillcolor;
-            ctx.fillRect(el.x, el.y, el.width, el.height);
+            ctx.fillRect(-el.width/2, -el.height/2, el.width, el.height);
         }
         ctx.strokeStyle = el.boundcolor;
-        ctx.strokeRect(el.x, el.y, el.width, el.height);
+        ctx.strokeRect(-el.width/2, -el.height/2, el.width, el.height);
+        ctx.restore();
         console.log(renders);
         console.log(history);
     }
@@ -72,15 +76,19 @@ function drawElement(el) {
         ctx.beginPath();
         ctx.strokeStyle = el.boundcolor;
         ctx.lineWidth = el.lineWid;
-        ctx.moveTo(el.x1, el.y1);
-        ctx.lineTo(el.x2, el.y2);
-        ctx.lineTo(el.x3, el.y3);
+        ctx.save();
+        ctx.translate(el.centrex, el.centrey);
+        ctx.rotate(el.angle);
+        ctx.moveTo(el.x1 - el.centrex, el.y1 - el.centrey);
+        ctx.lineTo(el.x2 - el.centrex, el.y2 - el.centrey);
+        ctx.lineTo(el.x3 - el.centrex, el.y3 - el.centrey);
         ctx.closePath();
         if (el.fillcolor) {
             ctx.fillStyle = el.fillcolor;
             ctx.fill();
         }
         ctx.stroke();
+        ctx.restore();
     }
 
     else if (el.type === "stroke") {
@@ -129,31 +137,43 @@ window.addEventListener("keydown", (e) => {
         renders = JSON.parse(JSON.stringify(history[undoptr]));
     }
     if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
         save();
     }
-    if (e.key === "r") {
+    if (e.key === "r" && !e.ctrlKey && !keyshort) {
         drawRect();
     }
-    if (e.key === "c") {
+    if (e.key === "c" && !keyshort) {
         drawCir();
     }
-    if (e.key === "t") {
+    if (e.key === "t" && !keyshort) {
         drawTri();
     }
-    if (e.key === "b") {
+    if (e.key === "b" && !keyshort) {
         drawStok();
     }
-    if (e.key === "e") {
+    if (e.key === "e" && !keyshort) {
         drawStok2();
     }
-    if (e.key === "m") {
+    if (e.key === "m" && !keyshort) {
         selection();
     }
-    if (e.key === "d") {
+    if (e.key === "s" && !e.ctrlKey && !keyshort) {
         remv();
     }
-    if (e.key === "f") {
+    if (e.key === "f" && !keyshort) {
         fillcolr();
+    }
+    if (e.shiftKey && e.key === "R" && !keyshort && !e.ctrlKey) {
+        console.log(101);
+        e.preventDefault();
+        console.log(111);
+        rotation();
+        console.log(121);
+    }
+    if (e.shiftKey && e.key === "T" && !keyshort && !e.ctrlKey ) {
+        e.preventDefault();
+        txt();
     }
 });
 
@@ -185,7 +205,9 @@ function position_finder(el, px, py) {
         return triangleinside(px, py, el);
     }
     else if (el.type === "text") {
-
+        const wid = ctx.measureText(el.content).width;
+        const hei = el.fontSize * 16;
+        return(px >= el.x && px <= el.x + wid && py >= el.y - hei && py <= el.y);
     }
 }
 

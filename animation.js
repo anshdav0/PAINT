@@ -4,7 +4,7 @@ let frame;
 let elel = null;
 let fortrix;
 let fortriy;
-
+let keyshort;
 
 function drawRect() {
     if(itemchosen === "rec"){
@@ -24,6 +24,7 @@ function drawRect() {
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
         document.getElementById("remv").classList.remove("active");
+        document.getElementById("rot").classList.remove("active");
     }
 
     if(itemchosen === "rec") {
@@ -66,6 +67,7 @@ canvas.addEventListener("mouseup", (e) => {
         centrex: srecx + (e.offsetX - srecx) / 2,
         centrey: srecy + (e.offsetY - srecy) / 2,
         boundcolor: primColor,
+        angle: 0,
         fillcolor: null,
     }
      console.log("rect");
@@ -105,6 +107,7 @@ function drawCir() {
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
         document.getElementById("remv").classList.remove("active");
+        document.getElementById("rot").classList.remove("active");
     }
 
     if(itemchosen === "cir") {
@@ -179,6 +182,7 @@ function selection() {
         document.getElementById("rect").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
         document.getElementById("remv").classList.remove("active");
+        document.getElementById("rot").classList.remove("active");
     }
     if(itemchosen === "sel") {
         canvas.style.cursor = "grab";
@@ -213,8 +217,8 @@ addEventListener("mousemove", (e) => {
     if (elel.type === "cir"){
     ctx.putImageData(frame, 0, 0);
     ctx.beginPath();
-        ctx.strokeStyle = elel.boundcolor;
-        ctx.lineWidth = elel.lineWid;
+        ctx.strokeStyle = primColor;
+        ctx.lineWidth = linewid;
         ctx.arc(e.offsetX, e.offsetY, elel.radius , 0, Math.PI * 2);
         if (elel.fillcolor) {
             ctx.fillStyle = elel.fillcolor;
@@ -225,20 +229,24 @@ addEventListener("mousemove", (e) => {
 
     else if (elel.type === "rect"){
         ctx.putImageData(frame, 0, 0);
-        ctx.lineWidth = elel.lineWid;
+        ctx.lineWidth = linewid;
+        ctx.save();
+        ctx.translate(e.offsetX, e.offsetY);
+        ctx.rotate(elel.angle);
             if (elel.fillcolor) {
                 ctx.fillStyle = elel.fillcolor;
-                ctx.fillRect(e.offsetX, e.offsetY, elel.width, elel.height);
+                ctx.fillRect(-(elel.width / 2), -(elel.height / 2), elel.width, elel.height);
             }
-        ctx.strokeStyle = elel.boundcolor;
-        ctx.strokeRect(e.offsetX, e.offsetY, elel.width, elel.height);
+        ctx.strokeStyle = primColor;
+        ctx.strokeRect(-(elel.width / 2), -(elel.height / 2), elel.width, elel.height);
+        ctx.restore();
     }
 
     else if (elel.type === "tri"){
         ctx.putImageData(frame, 0, 0);
         ctx.beginPath();
-        ctx.strokeStyle = elel.boundcolor;
-        ctx.lineWidth = elel.lineWid;
+        ctx.strokeStyle = primColor;
+        ctx.lineWidth = linewid;
         ctx.moveTo(e.offsetX, e.offsetY);
         ctx.lineTo(elel.x2 - (elel.x1 - e.offsetX), elel.y2 - (elel.y1 - e.offsetY));
         ctx.lineTo(elel.x3 - (elel.x1 - e.offsetX), elel.y3 - (elel.y1 - e.offsetY));
@@ -248,6 +256,14 @@ addEventListener("mousemove", (e) => {
             ctx.fill();
         }
         ctx.stroke();
+    }
+
+    else if (elel.type === "text"){      
+        ctx.putImageData(frame, 0, 0);
+        ctx.font = `${elel.fontSize}rem ${elel.font}`;
+        ctx.lineWidth = linewid;
+        ctx.fillStyle = primColor;
+        ctx.fillText(elel.content, e.offsetX, e.offsetY);
     }
 })
 
@@ -265,8 +281,9 @@ addEventListener("mouseup", (e) => {
             radius: elel.radius,
             centrex: e.offsetX,
             centrey: e.offsetY,
-            lineWid: elel.lineWid,
-            boundcolor: elel.boundcolor,
+            angle: elel.angle,
+            lineWid: linewid,
+            boundcolor: primColor,
             fillcolor: elel.fillcolor,
         }
 
@@ -282,14 +299,15 @@ addEventListener("mouseup", (e) => {
     else if (elel.type === "rect") {
         const el = {
             type: "rect",
-            x: e.offsetX,
-            y: e.offsetY,
+            x: e.offsetX - elel.width / 2,
+            y: e.offsetY - elel.height / 2,
             width: elel.width,
             height: elel.height,
-            lineWid: elel.lineWid,
-            centrex: e.offsetX + (elel.width) / 2,
-            centrey: e.offsetY + (elel.height) / 2,
-            boundcolor: elel.boundcolor,
+            lineWid: linewid,
+            angle: elel.angle,
+            centrex: e.offsetX,
+            centrey: e.offsetY,
+            boundcolor: primColor,
             fillcolor: elel.fillcolor,
         }
 
@@ -311,10 +329,11 @@ addEventListener("mouseup", (e) => {
             y2: elel.y2 - (elel.y1 - e.offsetY),
             x3: elel.x3 - (elel.x1 - e.offsetX),
             y3: elel.y3 - (elel.y1 - e.offsetY),
+            angle: elel.angle,
             centrex: (e.offsetX+elel.x2 - (elel.x1 - e.offsetX)+elel.x3 - (elel.x1 - e.offsetX))/3,
             centrey: (e.offsetY+elel.y2 - (elel.y1 - e.offsetY)+elel.y3 - (elel.y1 - e.offsetY))/3,
-            lineWid: elel.lineWid,
-            boundcolor: elel.boundcolor,
+            lineWid: linewid,
+            boundcolor: primColor,
             fillcolor: elel.fillcolor,
         }
 
@@ -326,6 +345,53 @@ addEventListener("mouseup", (e) => {
         frame = null;
         save();
     }
+
+    else if (elel.type === "text") {
+
+        ctx.putImageData(frame, 0, 0);
+        frame = null;
+        editingTextIndex = null;
+        futuretxtx = e.offsetX;
+        futuretxty = e.offsetY;
+        
+        textInput.style.left = e.offsetX + "px";
+        textInput.style.top = e.offsetY + "px";
+        textInput.style.opacity = "1";
+        textInput.style.pointerEvents = "auto";
+        textInput.value = elel.content;
+        textInput.focus();
+    }
+
+    textInput.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter") return;
+        if (textInput.value.trim() === "") return;
+
+        if (editingTextIndex !== null) {
+            renders[editingTextIndex].content = textInput.value;
+        } else {
+            const el = {
+                type: "text",
+                x: futuretxtx,
+                y: futuretxty,
+                content: textInput.value,
+                font: "Arial",
+                fontSize: linewid * 0.75,
+                boundcolor: primColor,
+                layer: 0,
+                angle: 0,
+            };
+            renders.pop();
+            renders.push(el);
+        }
+
+        history.splice(undoptr + 1);
+        history.push(JSON.parse(JSON.stringify(renders)));
+        undoptr++;
+        draw();
+        textInput.style.opacity = "0";
+        textInput.style.pointerEvents = "none";
+        save();
+    });
      
     
 })
@@ -349,6 +415,7 @@ function fillcolr() {
         document.getElementById("sele").classList.remove("active");
         document.getElementById("rect").classList.remove("active");
         document.getElementById("remv").classList.remove("active");
+        document.getElementById("rot").classList.remove("active");
     }
     if(itemchosen === "filc") {
         canvas.style.cursor = "url('bb.cur'), auto";
@@ -395,6 +462,7 @@ function drawTri() {
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
         document.getElementById("remv").classList.remove("active");
+        document.getElementById("rot").classList.remove("active");
     }
 
     if(itemchosen === "tri") {
@@ -436,6 +504,7 @@ canvas.addEventListener("click", (e) => {
             y2: triy2,
             x3: trix3,
             y3: triy3,
+            angle: 0,
             centrex: (trix1+trix2+trix3)/3,
             centrey: (triy1+triy2+triy3)/3,
             lineWid: linewid,
@@ -509,6 +578,7 @@ function drawStok() {
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
         document.getElementById("remv").classList.remove("active");
+        document.getElementById("rot").classList.remove("active");
     }
 
     if(itemchosen === "strk") {
@@ -591,6 +661,7 @@ function drawStok2() {
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
         document.getElementById("remv").classList.remove("active");
+        document.getElementById("rot").classList.remove("active");
     }
 
     if(itemchosen === "strk2") {
@@ -648,7 +719,7 @@ canvas.addEventListener("mousemove", (e) => {
     eraserCooldown = true;
     setTimeout(() => {
         eraserCooldown = false;
-    }, 500);
+    }, 250);
 });
 
 canvas.addEventListener("mouseup", (e) => {
@@ -701,6 +772,7 @@ function txt() {
         document.getElementById("sele").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
         document.getElementById("remv").classList.remove("active");
+        document.getElementById("rot").classList.remove("active");
     }
 
     if(itemchosen === "txt") {
@@ -714,6 +786,7 @@ function txt() {
 
 canvas.addEventListener("click", (e) => {
     if (itemchosen !== "txt") return;
+    keyshort = true;
     textInput.style.left = e.offsetX + "px";
     textInput.style.top = e.offsetY + "px";
     textInput.style.opacity = "1";
@@ -723,7 +796,7 @@ canvas.addEventListener("click", (e) => {
 });
 
 textInput.addEventListener("keydown", (e) => {
-    if (e.key !== "Enter") return;
+    if (e.key !== "Enter") {return;}
     if (textInput.value.trim() === "") return;
     const el = {
         type: "text",
@@ -735,6 +808,7 @@ textInput.addEventListener("keydown", (e) => {
         boundcolor: primColor,
         layer: 0,
     };
+    keyshort = false;
      
     history.splice(undoptr + 1);
     renders.push(el);
@@ -773,6 +847,7 @@ function remv() {
         document.getElementById("rect").classList.remove("active");
         document.getElementById("fill").classList.remove("active");
         document.getElementById("sele").classList.remove("active");
+        document.getElementById("rot").classList.remove("active");
     }
     
     if(itemchosen === "remv") {
@@ -821,15 +896,19 @@ addEventListener("mousemove", (e) => {
         ctx.stroke();
     }
 
-    else if (elel.type === "rect"){
+    else if (elel.type === "rect") {
         ctx.putImageData(frame, 0, 0);
+        ctx.save();
+        ctx.translate(elel.x + (e.offsetX - elel.x)/2, elel.y + (e.offsetY - elel.y)/2);
+        ctx.rotate(elel.angle);
         ctx.lineWidth = elel.lineWid;
-            if (elel.fillcolor) {
-                ctx.fillStyle = elel.fillcolor;
-                ctx.fillRect(elel.x, elel.y, e.offsetX - elel.x, e.offsetY - elel.y);
-            }
+        if (elel.fillcolor) {
+            ctx.fillStyle = elel.fillcolor;
+            ctx.fillRect(-(e.offsetX - elel.x)/2, -(e.offsetY - elel.y)/2, e.offsetX - elel.x, e.offsetY - elel.y);
+        }
         ctx.strokeStyle = elel.boundcolor;
-        ctx.strokeRect(elel.x, elel.y, Math.abs(elel.x - e.offsetX), Math.abs(elel.y - e.offsetY));
+        ctx.strokeRect(-(e.offsetX - elel.x)/2, -(e.offsetY - elel.y)/2, e.offsetX - elel.x, e.offsetY - elel.y);
+        ctx.restore();
     }
 
     else if (elel.type === "tri"){
@@ -885,8 +964,9 @@ addEventListener("mouseup", (e) => {
             width: Math.abs(e.offsetX - elel.x),
             height: Math.abs(e.offsetY - elel.y),
             lineWid: elel.lineWid,
-            centrex: elel.x + (e.offsetX - elel.x) / 2,
-            centrey: elel.y + (e.offsetY - elel.y) / 2,
+            angle: elel.angle,
+            centrex: elel.x + (e.offsetX - elel.x)/2,
+            centrey: elel.y + (e.offsetY - elel.y)/2,
             boundcolor: elel.boundcolor,
             fillcolor: elel.fillcolor,
         }
@@ -911,6 +991,7 @@ addEventListener("mouseup", (e) => {
             y3: elel.centrey + (elel.y3 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
             centrex: elel.centrex,
             centrey: elel.centrey,
+            angle: elel.angle,
             lineWid: elel.lineWid,
             boundcolor: elel.boundcolor,
             fillcolor: elel.fillcolor,
@@ -926,4 +1007,153 @@ addEventListener("mouseup", (e) => {
         frame = null;
         save();
     }
+})
+
+
+
+
+function rotation() {
+    if(itemchosen === "rot"){
+        itemchosen = "";
+        let b = document.getElementById("rot");
+        b.classList.remove("active");
+    }
+    else{
+        itemchosen = "rot";
+        let b = document.getElementById("rot");
+        b.classList.add("active");
+        document.getElementById("cir").classList.remove("active");
+        document.getElementById("tri").classList.remove("active");
+        document.getElementById("brs1").classList.remove("active");
+        document.getElementById("brs2").classList.remove("active");
+        document.getElementById("txt").classList.remove("active");
+        document.getElementById("rect").classList.remove("active");
+        document.getElementById("fill").classList.remove("active");
+        document.getElementById("remv").classList.remove("active");
+        document.getElementById("sele").classList.remove("active");
+    }
+    if(itemchosen === "rot") {
+        canvas.style.cursor = "grab";
+    }
+    else {
+        canvas.style.cursor = "default";
+    }
+}
+
+canvas.addEventListener("mousedown", (e) => {
+    if (itemchosen !== "rot") return;
+    console.log(identify(e.offsetX, e.offsetY));
+    if (identify(e.offsetX, e.offsetY) === null) {return;}
+    elel = renders[identify(e.offsetX, e.offsetY)];
+    canvas.style.cursor = "grabbing";
+    renders.splice(identify(e.offsetX, e.offsetY), 1);
+    console.log(elel);
+    history.splice(undoptr + 1);
+    undoptr++;
+    history.push(JSON.parse(JSON.stringify(renders)));
+    draw();
+    history.pop();
+    undoptr--;
+    frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+});
+
+addEventListener("mousemove", (e) => {
+    if (itemchosen !== "rot") {return;}
+    if (!frame) return;
+    canvas.style.cursor = "grabbing";
+
+    if (elel.type === "rect"){
+        ctx.putImageData(frame, 0, 0);
+        ctx.save();
+        ctx.translate(elel.centrex, elel.centrey);
+        ctx.rotate(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex));
+        ctx.lineWidth = elel.lineWid;
+            if (elel.fillcolor) {
+                ctx.fillStyle = elel.fillcolor;
+                ctx.fillRect(-elel.width/2, -elel.height/2, elel.width, elel.height);
+            }
+        ctx.strokeStyle = elel.boundcolor;
+        ctx.strokeRect(-elel.width/2, -elel.height/2, elel.width, elel.height);
+        ctx.restore();
+    }
+
+    else if (elel.type === "tri"){
+        ctx.putImageData(frame, 0, 0);
+        ctx.save();
+        ctx.translate(elel.centrex, elel.centrey);
+        ctx.rotate(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex));
+        ctx.beginPath();
+        ctx.strokeStyle = elel.boundcolor;
+        ctx.lineWidth = elel.lineWid;
+        ctx.moveTo(elel.x1 - elel.centrex, elel.y1 - elel.centrey);
+        ctx.lineTo(elel.x2 - elel.centrex, elel.y2 - elel.centrey);
+        ctx.lineTo(elel.x3 - elel.centrex, elel.y3 - elel.centrey);
+        ctx.closePath();
+        if (elel.fillcolor) {
+            ctx.fillStyle = elel.fillcolor;
+            ctx.fill();
+        }
+        ctx.stroke();
+        ctx.restore();
+    }
+})
+
+addEventListener("mouseup", (e) => {
+    if (itemchosen !== "rot") return;
+    if (!frame) return;
+    canvas.style.cursor = "grab";
+    ctx.putImageData(frame, 0, 0);
+    
+    if (elel.type === "rect") {
+        const el = {
+            type: "rect",
+            x: elel.centrex - elel.width / 2,
+            y: elel.centrey - elel.height / 2,
+            width: elel.width,
+            height: elel.height,
+            lineWid: elel.lineWid,
+            centrex: elel.centrex,
+            centrey: elel.centrey,
+            angle: Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex),
+            boundcolor: elel.boundcolor,
+            fillcolor: elel.fillcolor,
+        }
+
+        history.splice(undoptr + 1);
+        renders.push(el);
+        undoptr++;
+        history.push(JSON.parse(JSON.stringify(renders)));
+        draw();
+        frame = null;
+        save();
+    }
+
+    else if (elel.type === "tri") {
+        const el = {
+            type: "tri",
+            x1: elel.centrex + (elel.x1 - elel.centrex)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) - (elel.y1 - elel.centrey)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
+            y1: elel.centrey + (elel.x1 - elel.centrex)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) + (elel.y1 - elel.centrey)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
+            x2: elel.centrex + (elel.x2 - elel.centrex)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) - (elel.y2 - elel.centrey)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
+            y2: elel.centrey + (elel.x2 - elel.centrex)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) + (elel.y2 - elel.centrey)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
+            x3: elel.centrex + (elel.x3 - elel.centrex)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) - (elel.y3 - elel.centrey)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
+            y3: elel.centrey + (elel.x3 - elel.centrex)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) + (elel.y3 - elel.centrey)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
+            angle: 0,
+            centrex: elel.centrex,
+            centrey: elel.centrey,
+            lineWid: elel.lineWid,
+            boundcolor: elel.boundcolor,
+            fillcolor: elel.fillcolor,
+        }
+
+        history.splice(undoptr + 1);
+        renders.push(el);
+        undoptr++;
+        history.push(JSON.parse(JSON.stringify(renders)));
+        draw();
+        frame = null;
+        save();
+    }
+     
+    
 })
