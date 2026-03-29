@@ -1,6 +1,7 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -27,6 +28,12 @@ console.log(history);
 document.getElementById("widthofline").addEventListener("input", (e) => {
     linewid = parseInt(e.target.value);
 });
+
+
+
+if (localStorage.getItem("theme") === "true") {
+    theme();
+}
 
 function setCol(color) {
     primColor = color;
@@ -315,6 +322,8 @@ function save() {
         let load = JSON.stringify(history[undoptr]);
         localStorage.setItem("Load", load);
     }
+    
+    localStorage.setItem("theme", document.documentElement.getAttribute("data-theme") === "dark");
 }
 
 function reset() {
@@ -338,28 +347,34 @@ function theme() {
 
     if (html.getAttribute("data-theme") === "dark") {
         html.removeAttribute("data-theme");
-        for (let el of history[undoptr]) {
-            if (el.type !== "stroke2") {
-                if (el.boundcolor === "white") {
-                    el.boundcolor = "black";
+        if (undoptr >= 0){
+            for (let el of history[undoptr]) {
+                if (el.type !== "stroke2") {
+                    if (el.boundcolor === "white") {
+                        el.boundcolor = "black";
+                    }
                 }
+                else {el.boundcolor = "white";}
             }
-            else {el.boundcolor = "white";}
-        }
         draw();
+        }
     }
     else {
         html.setAttribute("data-theme", "dark");
-        for (let el of history[undoptr]) {
-            if (el.type !== "stroke2"){
-                if (el.boundcolor === "black") {
-                    el.boundcolor = "white";
+        if (undoptr >= 0){
+            for (let el of history[undoptr]) {
+                if (el.type !== "stroke2"){
+                    if (el.boundcolor === "black") {
+                        el.boundcolor = "white";
+                    }
                 }
+                else {el.boundcolor = "black";}
             }
-            else {el.boundcolor = "black";}
+            draw();
         }
-        draw();
+        
     }
+    save();
 }
 
 
