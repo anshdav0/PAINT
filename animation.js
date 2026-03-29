@@ -39,8 +39,8 @@ function drawRect() {
 
 canvas.addEventListener("mousedown", (e) => {
     if (itemchosen !== "rec") return;
-    srecx = e.offsetX;
-    srecy = e.offsetY;
+    srecx = lastX;
+    srecy = lastY;
     frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
 });
 
@@ -50,7 +50,7 @@ canvas.addEventListener("mousemove", (e) => {
     ctx.putImageData(frame, 0, 0);
     ctx.lineWidth = linewid;
     ctx.strokeStyle = primColor;
-    ctx.strokeRect(srecx, srecy, e.offsetX - srecx, e.offsetY - srecy);
+    ctx.strokeRect(srecx, srecy, lastX - srecx, lastY - srecy);
 });
 
 canvas.addEventListener("mouseup", (e) => {
@@ -61,11 +61,11 @@ canvas.addEventListener("mouseup", (e) => {
         type: "rect",
         x: srecx,
         y: srecy,
-        width: e.offsetX - srecx,
-        height: e.offsetY - srecy,
+        width: lastX - srecx,
+        height: lastY - srecy,
         lineWid: linewid,
-        centrex: srecx + (e.offsetX - srecx) / 2,
-        centrey: srecy + (e.offsetY - srecy) / 2,
+        centrex: srecx + (lastX - srecx) / 2,
+        centrey: srecy + (lastY - srecy) / 2,
         boundcolor: primColor,
         angle: 0,
         fillcolor: null,
@@ -120,8 +120,8 @@ function drawCir() {
 
 canvas.addEventListener("mousedown", (e) => {
     if (itemchosen !== "cir") return;
-    scircenx = e.offsetX;
-    scirceny = e.offsetY;
+    scircenx = lastX;
+    scirceny = lastY;
     frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
 });
 
@@ -132,7 +132,7 @@ canvas.addEventListener("mousemove", (e) => {
     ctx.beginPath();
     ctx.lineWidth = linewid;
     ctx.strokeStyle = primColor;
-    ctx.arc(scircenx, scirceny, Math.sqrt((e.offsetX - scircenx)**2 + (e.offsetY - scirceny)**2) , 0, Math.PI * 2);
+    ctx.arc(scircenx, scirceny, Math.sqrt((lastX - scircenx)**2 + (lastY - scirceny)**2) , 0, Math.PI * 2);
     ctx.stroke();
 });
 
@@ -145,7 +145,7 @@ canvas.addEventListener("mouseup", (e) => {
         type: "cir",
         x: scircenx,
         y: scirceny,
-        radius: Math.sqrt((e.offsetX - scircenx)**2 + (e.offsetY - scirceny)**2),
+        radius: Math.sqrt((lastX - scircenx)**2 + (lastY - scirceny)**2),
         centrex: scircenx,
         centrey: scirceny,
         lineWid: linewid,
@@ -194,11 +194,11 @@ function selection() {
 
 canvas.addEventListener("mousedown", (e) => {
     if (itemchosen !== "sel") return;
-    console.log(identify(e.offsetX, e.offsetY));
-    if (identify(e.offsetX, e.offsetY) === null) {return;}
-    elel = renders[identify(e.offsetX, e.offsetY)];
+    console.log(identify(lastX, lastY));
+    if (identify(lastX, lastY) === null) {return;}
+    elel = renders[identify(lastX, lastY)];
     canvas.style.cursor = "grabbing";
-    renders.splice(identify(e.offsetX, e.offsetY), 1);
+    renders.splice(identify(lastX, lastY), 1);
     console.log(elel);
     history.splice(undoptr + 1);
     undoptr++;
@@ -219,7 +219,7 @@ addEventListener("mousemove", (e) => {
     ctx.beginPath();
         ctx.strokeStyle = primColor;
         ctx.lineWidth = linewid;
-        ctx.arc(e.offsetX, e.offsetY, elel.radius , 0, Math.PI * 2);
+        ctx.arc(lastX, lastY, elel.radius , 0, Math.PI * 2);
         if (elel.fillcolor) {
             ctx.fillStyle = elel.fillcolor;
             ctx.fill();
@@ -231,7 +231,7 @@ addEventListener("mousemove", (e) => {
         ctx.putImageData(frame, 0, 0);
         ctx.lineWidth = linewid;
         ctx.save();
-        ctx.translate(e.offsetX, e.offsetY);
+        ctx.translate(lastX, lastY);
         ctx.rotate(elel.angle);
             if (elel.fillcolor) {
                 ctx.fillStyle = elel.fillcolor;
@@ -247,9 +247,9 @@ addEventListener("mousemove", (e) => {
         ctx.beginPath();
         ctx.strokeStyle = primColor;
         ctx.lineWidth = linewid;
-        ctx.moveTo(e.offsetX, e.offsetY);
-        ctx.lineTo(elel.x2 - (elel.x1 - e.offsetX), elel.y2 - (elel.y1 - e.offsetY));
-        ctx.lineTo(elel.x3 - (elel.x1 - e.offsetX), elel.y3 - (elel.y1 - e.offsetY));
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(elel.x2 - (elel.x1 - lastX), elel.y2 - (elel.y1 - lastY));
+        ctx.lineTo(elel.x3 - (elel.x1 - lastX), elel.y3 - (elel.y1 - lastY));
         ctx.closePath();
         if (elel.fillcolor) {
             ctx.fillStyle = elel.fillcolor;
@@ -263,7 +263,7 @@ addEventListener("mousemove", (e) => {
         ctx.font = `${elel.fontSize}rem ${elel.font}`;
         ctx.lineWidth = linewid;
         ctx.fillStyle = primColor;
-        ctx.fillText(elel.content, e.offsetX, e.offsetY);
+        ctx.fillText(elel.content, lastX, lastY);
     }
 })
 
@@ -276,11 +276,11 @@ addEventListener("mouseup", (e) => {
     if (elel.type === "cir") {
         const el = {
             type: "cir",
-            x: e.offsetX,
-            y: e.offsetY,
+            x: lastX,
+            y: lastY,
             radius: elel.radius,
-            centrex: e.offsetX,
-            centrey: e.offsetY,
+            centrex: lastX,
+            centrey: lastY,
             angle: elel.angle,
             lineWid: linewid,
             boundcolor: primColor,
@@ -299,14 +299,14 @@ addEventListener("mouseup", (e) => {
     else if (elel.type === "rect") {
         const el = {
             type: "rect",
-            x: e.offsetX - elel.width / 2,
-            y: e.offsetY - elel.height / 2,
+            x: lastX - elel.width / 2,
+            y: lastY - elel.height / 2,
             width: elel.width,
             height: elel.height,
             lineWid: linewid,
             angle: elel.angle,
-            centrex: e.offsetX,
-            centrey: e.offsetY,
+            centrex: lastX,
+            centrey: lastY,
             boundcolor: primColor,
             fillcolor: elel.fillcolor,
         }
@@ -323,15 +323,15 @@ addEventListener("mouseup", (e) => {
     else if (elel.type === "tri") {
         const el = {
             type: "tri",
-            x1: e.offsetX,
-            y1: e.offsetY,
-            x2: elel.x2 - (elel.x1 - e.offsetX),
-            y2: elel.y2 - (elel.y1 - e.offsetY),
-            x3: elel.x3 - (elel.x1 - e.offsetX),
-            y3: elel.y3 - (elel.y1 - e.offsetY),
+            x1: lastX,
+            y1: lastY,
+            x2: elel.x2 - (elel.x1 - lastX),
+            y2: elel.y2 - (elel.y1 - lastY),
+            x3: elel.x3 - (elel.x1 - lastX),
+            y3: elel.y3 - (elel.y1 - lastY),
             angle: elel.angle,
-            centrex: (e.offsetX+elel.x2 - (elel.x1 - e.offsetX)+elel.x3 - (elel.x1 - e.offsetX))/3,
-            centrey: (e.offsetY+elel.y2 - (elel.y1 - e.offsetY)+elel.y3 - (elel.y1 - e.offsetY))/3,
+            centrex: (lastX+elel.x2 - (elel.x1 - lastX)+elel.x3 - (elel.x1 - lastX))/3,
+            centrey: (lastY+elel.y2 - (elel.y1 - lastY)+elel.y3 - (elel.y1 - lastY))/3,
             lineWid: linewid,
             boundcolor: primColor,
             fillcolor: elel.fillcolor,
@@ -351,11 +351,11 @@ addEventListener("mouseup", (e) => {
         ctx.putImageData(frame, 0, 0);
         frame = null;
         editingTextIndex = null;
-        futuretxtx = e.offsetX;
-        futuretxty = e.offsetY;
+        futuretxtx = lastX;
+        futuretxty = lastY;
         
-        textInput.style.left = e.offsetX + "px";
-        textInput.style.top = e.offsetY + "px";
+        textInput.style.left = lastX + "px";
+        textInput.style.top = lastY + "px";
         textInput.style.opacity = "1";
         textInput.style.pointerEvents = "auto";
         textInput.value = elel.content;
@@ -427,7 +427,7 @@ function fillcolr() {
 
 canvas.addEventListener("click", (e) => {
     if (itemchosen !== "filc") {return;}
-    let ele = identify(e.offsetX, e.offsetY);
+    let ele = identify(lastX, lastY);
     if (ele === null) {return;}
    // history[undoptr][ele].fillcolor = primColor;
     renders[ele].fillcolor = primColor;
@@ -476,8 +476,8 @@ function drawTri() {
 canvas.addEventListener("click", (e) => {
     if(i === 0){
         if (itemchosen !== "tri") return;
-        trix1 = e.offsetX;
-        triy1 = e.offsetY;
+        trix1 = lastX;
+        triy1 = lastY;
         frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
         i++;
     }
@@ -485,8 +485,8 @@ canvas.addEventListener("click", (e) => {
         if (itemchosen !== "tri") return;
         if (!frame) return;
         ctx.putImageData(frame, 0, 0);
-        trix2 = e.offsetX;
-        triy2 = e.offsetY;
+        trix2 = lastX;
+        triy2 = lastY;
         frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
         i++
     }
@@ -494,8 +494,8 @@ canvas.addEventListener("click", (e) => {
         if (itemchosen !== "tri") return;
         if (!frame) return;
         ctx.putImageData(frame, 0, 0);
-        trix3 = e.offsetX;
-        triy3 = e.offsetY;
+        trix3 = lastX;
+        triy3 = lastY;
         const el = {
             type: "tri",
             x1: trix1,
@@ -532,7 +532,7 @@ canvas.addEventListener("mousemove", (e) => {
         ctx.lineWidth = linewid;
         ctx.strokeStyle = primColor;
         ctx.moveTo(trix1, triy1);
-        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.lineTo(lastX, lastY);
         ctx.stroke();
     }
     if(i === 2){    
@@ -544,7 +544,7 @@ canvas.addEventListener("mousemove", (e) => {
         ctx.strokeStyle = primColor;
         ctx.moveTo(trix1, triy1);
         ctx.lineTo(trix2, triy2);
-        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.lineTo(lastX, lastY);
         ctx.closePath();
         ctx.stroke();
     }
@@ -591,7 +591,7 @@ function drawStok() {
 
 canvas.addEventListener("mousedown", (e) => {
     if (itemchosen !== "strk") return;
-    currentStroke = [{x: e.offsetX, y: e.offsetY}];
+    currentStroke = [{x: lastX, y: lastY}];
     frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
 });
 
@@ -599,7 +599,7 @@ canvas.addEventListener("mousemove", (e) => {
     if (itemchosen !== "strk") return;
     if (!frame) return;
     ctx.putImageData(frame, 0, 0);
-    currentStroke.push({x: e.offsetX, y: e.offsetY});
+    currentStroke.push({x: lastX, y: lastY});
     if (currentStroke.length > 1) {
         ctx.beginPath();
         ctx.strokeStyle = primColor;
@@ -674,7 +674,7 @@ function drawStok2() {
 
 canvas.addEventListener("mousedown", (e) => {
     if (itemchosen !== "strk2") return;
-    currentStroke = [{x: e.offsetX, y: e.offsetY}];
+    currentStroke = [{x: lastX, y: lastY}];
     frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
 });
 
@@ -682,7 +682,7 @@ canvas.addEventListener("mousemove", (e) => {
     if (itemchosen !== "strk2") return;
     if (!frame) return;
     ctx.putImageData(frame, 0, 0);
-    currentStroke.push({x: e.offsetX, y: e.offsetY});
+    currentStroke.push({x: lastX, y: lastY});
     
     if (currentStroke.length > 1) {
         ctx.beginPath();
@@ -707,9 +707,9 @@ canvas.addEventListener("mousemove", (e) => {
     if (!frame) return;
     
     if (eraserCooldown) return;
-    if (identify(e.offsetX, e.offsetY) === null) {return;}
+    if (identify(lastX, lastY) === null) {return;}
     ctx.putImageData(frame, 0, 0);
-    renders.splice(identify(e.offsetX, e.offsetY), 1);
+    renders.splice(identify(lastX, lastY), 1);
     history.splice(undoptr + 1);
     undoptr++;
     history.push(JSON.parse(JSON.stringify(renders)));
@@ -787,8 +787,8 @@ function txt() {
 canvas.addEventListener("click", (e) => {
     if (itemchosen !== "txt") return;
     keyshort = true;
-    textInput.style.left = e.offsetX + "px";
-    textInput.style.top = e.offsetY + "px";
+    textInput.style.left = lastX + "px";
+    textInput.style.top = lastY + "px";
     textInput.style.opacity = "1";
     textInput.style.pointerEvents = "auto";
     textInput.value = "";
@@ -861,11 +861,11 @@ function remv() {
 
 canvas.addEventListener("mousedown", (e) => {
     if (itemchosen !== "remv") return;
-    console.log(identify(e.offsetX, e.offsetY));
-    if (identify(e.offsetX, e.offsetY) === null) {return;}
-    elel = renders[identify(e.offsetX, e.offsetY)];
+    console.log(identify(lastX, lastY));
+    if (identify(lastX, lastY) === null) {return;}
+    elel = renders[identify(lastX, lastY)];
     canvas.style.cursor = "grabbing";
-    renders.splice(identify(e.offsetX, e.offsetY), 1);
+    renders.splice(identify(lastX, lastY), 1);
     console.log(elel);
     history.splice(undoptr + 1);
     undoptr++;
@@ -874,7 +874,7 @@ canvas.addEventListener("mousedown", (e) => {
     history.pop();
     undoptr--;
     frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    fortrix = Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2);
+    fortrix = Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2);
     console.log(fortrix);
 });
 
@@ -888,7 +888,7 @@ addEventListener("mousemove", (e) => {
     ctx.beginPath();
         ctx.strokeStyle = elel.boundcolor;
         ctx.lineWidth = elel.lineWid;
-        ctx.arc(elel.centrex, elel.centrey, Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2) , 0, Math.PI * 2);
+        ctx.arc(elel.centrex, elel.centrey, Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2) , 0, Math.PI * 2);
         if (elel.fillcolor) {
             ctx.fillStyle = elel.fillcolor;
             ctx.fill();
@@ -899,15 +899,15 @@ addEventListener("mousemove", (e) => {
     else if (elel.type === "rect") {
         ctx.putImageData(frame, 0, 0);
         ctx.save();
-        ctx.translate(elel.x + (e.offsetX - elel.x)/2, elel.y + (e.offsetY - elel.y)/2);
+        ctx.translate(elel.x + (lastX - elel.x)/2, elel.y + (lastY - elel.y)/2);
         ctx.rotate(elel.angle);
         ctx.lineWidth = elel.lineWid;
         if (elel.fillcolor) {
             ctx.fillStyle = elel.fillcolor;
-            ctx.fillRect(-(e.offsetX - elel.x)/2, -(e.offsetY - elel.y)/2, e.offsetX - elel.x, e.offsetY - elel.y);
+            ctx.fillRect(-(lastX - elel.x)/2, -(lastY - elel.y)/2, lastX - elel.x, lastY - elel.y);
         }
         ctx.strokeStyle = elel.boundcolor;
-        ctx.strokeRect(-(e.offsetX - elel.x)/2, -(e.offsetY - elel.y)/2, e.offsetX - elel.x, e.offsetY - elel.y);
+        ctx.strokeRect(-(lastX - elel.x)/2, -(lastY - elel.y)/2, lastX - elel.x, lastY - elel.y);
         ctx.restore();
     }
 
@@ -916,9 +916,9 @@ addEventListener("mousemove", (e) => {
         ctx.beginPath();
         ctx.strokeStyle = elel.boundcolor;
         ctx.lineWidth = elel.lineWid;
-        ctx.moveTo(elel.centrex + (elel.x1 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix, elel.centrey + (elel.y1 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix);
-        ctx.lineTo(elel.centrex + (elel.x2 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix, elel.centrey + (elel.y2 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix);
-        ctx.lineTo(elel.centrex + (elel.x3 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix, elel.centrey + (elel.y3 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix);
+        ctx.moveTo(elel.centrex + (elel.x1 - elel.centrex) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix, elel.centrey + (elel.y1 - elel.centrey) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix);
+        ctx.lineTo(elel.centrex + (elel.x2 - elel.centrex) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix, elel.centrey + (elel.y2 - elel.centrey) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix);
+        ctx.lineTo(elel.centrex + (elel.x3 - elel.centrex) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix, elel.centrey + (elel.y3 - elel.centrey) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix);
         ctx.closePath();
         if (elel.fillcolor) {
             ctx.fillStyle = elel.fillcolor;
@@ -939,7 +939,7 @@ addEventListener("mouseup", (e) => {
             type: "cir",
             x: elel.x,
             y: elel.y,
-            radius: Math.sqrt((e.offsetX - elel.x)**2 + (e.offsetY - elel.y)**2),
+            radius: Math.sqrt((lastX - elel.x)**2 + (lastY - elel.y)**2),
             centrex: elel.x,
             centrey: elel.y,
             lineWid: elel.lineWid,
@@ -961,12 +961,12 @@ addEventListener("mouseup", (e) => {
             type: "rect",
             x: elel.x,
             y: elel.y,
-            width: Math.abs(e.offsetX - elel.x),
-            height: Math.abs(e.offsetY - elel.y),
+            width: Math.abs(lastX - elel.x),
+            height: Math.abs(lastY - elel.y),
             lineWid: elel.lineWid,
             angle: elel.angle,
-            centrex: elel.x + (e.offsetX - elel.x)/2,
-            centrey: elel.y + (e.offsetY - elel.y)/2,
+            centrex: elel.x + (lastX - elel.x)/2,
+            centrey: elel.y + (lastY - elel.y)/2,
             boundcolor: elel.boundcolor,
             fillcolor: elel.fillcolor,
         }
@@ -983,12 +983,12 @@ addEventListener("mouseup", (e) => {
     else if (elel.type === "tri") {
         const el = {
             type: "tri",
-            x1: elel.centrex + (elel.x1 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
-            y1: elel.centrey + (elel.y1 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
-            x2: elel.centrex + (elel.x2 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
-            y2: elel.centrey + (elel.y2 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
-            x3: elel.centrex + (elel.x3 - elel.centrex) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
-            y3: elel.centrey + (elel.y3 - elel.centrey) * (Math.sqrt((e.offsetX - elel.centrex)**2 + (e.offsetY - elel.centrey)**2)) / fortrix,
+            x1: elel.centrex + (elel.x1 - elel.centrex) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix,
+            y1: elel.centrey + (elel.y1 - elel.centrey) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix,
+            x2: elel.centrex + (elel.x2 - elel.centrex) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix,
+            y2: elel.centrey + (elel.y2 - elel.centrey) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix,
+            x3: elel.centrex + (elel.x3 - elel.centrex) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix,
+            y3: elel.centrey + (elel.y3 - elel.centrey) * (Math.sqrt((lastX - elel.centrex)**2 + (lastY - elel.centrey)**2)) / fortrix,
             centrex: elel.centrex,
             centrey: elel.centrey,
             angle: elel.angle,
@@ -1042,11 +1042,11 @@ function rotation() {
 
 canvas.addEventListener("mousedown", (e) => {
     if (itemchosen !== "rot") return;
-    console.log(identify(e.offsetX, e.offsetY));
-    if (identify(e.offsetX, e.offsetY) === null) {return;}
-    elel = renders[identify(e.offsetX, e.offsetY)];
+    console.log(identify(lastX, lastY));
+    if (identify(lastX, lastY) === null) {return;}
+    elel = renders[identify(lastX, lastY)];
     canvas.style.cursor = "grabbing";
-    renders.splice(identify(e.offsetX, e.offsetY), 1);
+    renders.splice(identify(lastX, lastY), 1);
     console.log(elel);
     history.splice(undoptr + 1);
     undoptr++;
@@ -1067,7 +1067,7 @@ addEventListener("mousemove", (e) => {
         ctx.putImageData(frame, 0, 0);
         ctx.save();
         ctx.translate(elel.centrex, elel.centrey);
-        ctx.rotate(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex));
+        ctx.rotate(Math.atan2(lastY - elel.centrey, lastX - elel.centrex));
         ctx.lineWidth = elel.lineWid;
             if (elel.fillcolor) {
                 ctx.fillStyle = elel.fillcolor;
@@ -1082,7 +1082,7 @@ addEventListener("mousemove", (e) => {
         ctx.putImageData(frame, 0, 0);
         ctx.save();
         ctx.translate(elel.centrex, elel.centrey);
-        ctx.rotate(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex));
+        ctx.rotate(Math.atan2(lastY - elel.centrey, lastX - elel.centrex));
         ctx.beginPath();
         ctx.strokeStyle = elel.boundcolor;
         ctx.lineWidth = elel.lineWid;
@@ -1115,7 +1115,7 @@ addEventListener("mouseup", (e) => {
             lineWid: elel.lineWid,
             centrex: elel.centrex,
             centrey: elel.centrey,
-            angle: Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex),
+            angle: Math.atan2(lastY - elel.centrey, lastX - elel.centrex),
             boundcolor: elel.boundcolor,
             fillcolor: elel.fillcolor,
         }
@@ -1132,12 +1132,12 @@ addEventListener("mouseup", (e) => {
     else if (elel.type === "tri") {
         const el = {
             type: "tri",
-            x1: elel.centrex + (elel.x1 - elel.centrex)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) - (elel.y1 - elel.centrey)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
-            y1: elel.centrey + (elel.x1 - elel.centrex)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) + (elel.y1 - elel.centrey)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
-            x2: elel.centrex + (elel.x2 - elel.centrex)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) - (elel.y2 - elel.centrey)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
-            y2: elel.centrey + (elel.x2 - elel.centrex)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) + (elel.y2 - elel.centrey)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
-            x3: elel.centrex + (elel.x3 - elel.centrex)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) - (elel.y3 - elel.centrey)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
-            y3: elel.centrey + (elel.x3 - elel.centrex)*Math.sin(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)) + (elel.y3 - elel.centrey)*Math.cos(Math.atan2(e.offsetY - elel.centrey, e.offsetX - elel.centrex)),
+            x1: elel.centrex + (elel.x1 - elel.centrex)*Math.cos(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)) - (elel.y1 - elel.centrey)*Math.sin(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)),
+            y1: elel.centrey + (elel.x1 - elel.centrex)*Math.sin(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)) + (elel.y1 - elel.centrey)*Math.cos(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)),
+            x2: elel.centrex + (elel.x2 - elel.centrex)*Math.cos(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)) - (elel.y2 - elel.centrey)*Math.sin(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)),
+            y2: elel.centrey + (elel.x2 - elel.centrex)*Math.sin(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)) + (elel.y2 - elel.centrey)*Math.cos(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)),
+            x3: elel.centrex + (elel.x3 - elel.centrex)*Math.cos(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)) - (elel.y3 - elel.centrey)*Math.sin(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)),
+            y3: elel.centrey + (elel.x3 - elel.centrex)*Math.sin(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)) + (elel.y3 - elel.centrey)*Math.cos(Math.atan2(lastY - elel.centrey, lastX - elel.centrex)),
             angle: 0,
             centrex: elel.centrex,
             centrey: elel.centrey,
