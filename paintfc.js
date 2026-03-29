@@ -22,8 +22,7 @@ if (data) {
     history.push(JSON.parse(JSON.stringify(renders)));
     draw();
 }
-console.log(renders);
-console.log(history);
+
 
 document.getElementById("widthofline").addEventListener("input", (e) => {
     linewid = parseInt(e.target.value);
@@ -45,7 +44,6 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let el of history[undoptr]){
         drawElement(el);
-        console.log(undoptr);
     }
 }
 
@@ -63,8 +61,6 @@ function drawElement(el) {
         ctx.strokeStyle = el.boundcolor;
         ctx.strokeRect(-el.width/2, -el.height/2, el.width, el.height);
         ctx.restore();
-        console.log(renders);
-        console.log(history);
     }
 
     else if (el.type === "cir") {
@@ -141,7 +137,6 @@ function drawElement(el) {
             ctx.drawImage(img, -el.width/2, -el.height/2, el.width, el.height);
             ctx.restore();
         };
-        console.log(history);
     }
 
     
@@ -191,11 +186,8 @@ window.addEventListener("keydown", (e) => {
         fillcolr();
     }
     if (e.shiftKey && e.key === "R" && !keyshort && !e.ctrlKey) {
-        console.log(101);
         e.preventDefault();
-        console.log(111);
         rotation();
-        console.log(121);
     }
     if (e.shiftKey && e.key === "T" && !keyshort && !e.ctrlKey ) {
         e.preventDefault();
@@ -204,12 +196,9 @@ window.addEventListener("keydown", (e) => {
 });
 
 
-
-
 function identify(px, py) {
     for (let k = (history[undoptr]).length - 1; k >= 0; k--) {
         if (position_finder(history[undoptr][k], px, py)) {
-            console.log(84);
             return k;
         }
     }
@@ -392,4 +381,50 @@ function buttonctrl(item) {
         document.getElementById("img").classList.remove("active");
         document.getElementById(item).classList.add("active");
 
+}
+
+
+function savingthecurrentstate(el) {
+    history.splice(undoptr + 1);
+    renders.push(el);
+    undoptr++;
+    history.push(JSON.parse(JSON.stringify(renders)));
+    if(el.type === "stroke" || el.type === "stroke2"){
+        currentStroke = [];
+    }
+    draw();
+    if((el.type === "img" || el.type === "text") && itemchosen !== "remv" && itemchosen !== "sel" && itemchosen !== "rot"){
+        textInput.style.opacity = "0";
+        textInput.style.pointerEvents = "none";
+    }
+    frame = null;
+    save();
+}
+
+history.splice(undoptr + 1);
+    renders.push(el);
+    undoptr++;
+    history.push(JSON.parse(JSON.stringify(renders)));
+    draw();
+    frame = null;
+    save();
+
+function mathsfortri(a, x, y, f){
+return (x + (a - x) * (Math.sqrt((lastX - x)**2 + (lastY - y)**2)) / f);
+}
+function mathsfortriy(a, x, y, f){
+    return(y + (a - y) * (Math.sqrt((lastX - x)**2 + (lastY - y)**2)) / f)
+}
+
+function initialisation() {
+    elel = renders[identify(lastX, lastY)];
+    canvas.style.cursor = "grabbing";
+    renders.splice(identify(lastX, lastY), 1);
+    history.splice(undoptr + 1);
+    undoptr++;
+    history.push(JSON.parse(JSON.stringify(renders)));
+    draw();
+    history.pop();
+    undoptr--;
+    frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
 }
