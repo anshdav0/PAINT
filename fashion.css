@@ -139,9 +139,7 @@ canvas {
 .slidercontainer:hover {
     border-color: var(--slidconhoverborclr);
 }
-#widthofline {
-    -webkit-appearance: none;
-}
+
 
 #widthofline::-webkit-slider-thumb {
     -webkit-appearance: none;
