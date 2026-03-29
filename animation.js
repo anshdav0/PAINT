@@ -1234,5 +1234,3 @@ textInput.addEventListener("keydown", (e) => {
     save();
     i = 0;
 });
-
-
