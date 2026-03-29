@@ -14,17 +14,7 @@ function drawRect() {
     }
     else{
         itemchosen = "rec";
-        let b = document.getElementById("rect");
-        b.classList.add("active");
-        document.getElementById("cir").classList.remove("active");
-        document.getElementById("tri").classList.remove("active");
-        document.getElementById("brs1").classList.remove("active");
-        document.getElementById("brs2").classList.remove("active");
-        document.getElementById("txt").classList.remove("active");
-        document.getElementById("sele").classList.remove("active");
-        document.getElementById("fill").classList.remove("active");
-        document.getElementById("remv").classList.remove("active");
-        document.getElementById("rot").classList.remove("active");
+        buttonctrl("rect");
     }
 
     if(itemchosen === "rec") {
@@ -97,17 +87,7 @@ function drawCir() {
     }
     else{
         itemchosen = "cir";
-        let b = document.getElementById("cir");
-        b.classList.add("active");
-        document.getElementById("rect").classList.remove("active");
-        document.getElementById("tri").classList.remove("active");
-        document.getElementById("brs1").classList.remove("active");
-        document.getElementById("brs2").classList.remove("active");
-        document.getElementById("txt").classList.remove("active");
-        document.getElementById("sele").classList.remove("active");
-        document.getElementById("fill").classList.remove("active");
-        document.getElementById("remv").classList.remove("active");
-        document.getElementById("rot").classList.remove("active");
+        buttonctrl("cir");
     }
 
     if(itemchosen === "cir") {
@@ -172,17 +152,7 @@ function selection() {
     }
     else{
         itemchosen = "sel";
-        let b = document.getElementById("sele");
-        b.classList.add("active");
-        document.getElementById("cir").classList.remove("active");
-        document.getElementById("tri").classList.remove("active");
-        document.getElementById("brs1").classList.remove("active");
-        document.getElementById("brs2").classList.remove("active");
-        document.getElementById("txt").classList.remove("active");
-        document.getElementById("rect").classList.remove("active");
-        document.getElementById("fill").classList.remove("active");
-        document.getElementById("remv").classList.remove("active");
-        document.getElementById("rot").classList.remove("active");
+        buttonctrl("sele");
     }
     if(itemchosen === "sel") {
         canvas.style.cursor = "grab";
@@ -405,17 +375,7 @@ function fillcolr() {
     }
     else{
         itemchosen = "filc";
-        let b = document.getElementById("fill");
-        b.classList.add("active");
-        document.getElementById("cir").classList.remove("active");
-        document.getElementById("tri").classList.remove("active");
-        document.getElementById("brs1").classList.remove("active");
-        document.getElementById("brs2").classList.remove("active");
-        document.getElementById("txt").classList.remove("active");
-        document.getElementById("sele").classList.remove("active");
-        document.getElementById("rect").classList.remove("active");
-        document.getElementById("remv").classList.remove("active");
-        document.getElementById("rot").classList.remove("active");
+        buttonctrl("fill");
     }
     if(itemchosen === "filc") {
         canvas.style.cursor = "url('bb.cur'), auto";
@@ -452,17 +412,7 @@ function drawTri() {
     }
     else{
         itemchosen = "tri";
-        let b = document.getElementById("tri");
-        b.classList.add("active");
-        document.getElementById("cir").classList.remove("active");
-        document.getElementById("rect").classList.remove("active");
-        document.getElementById("brs1").classList.remove("active");
-        document.getElementById("brs2").classList.remove("active");
-        document.getElementById("txt").classList.remove("active");
-        document.getElementById("sele").classList.remove("active");
-        document.getElementById("fill").classList.remove("active");
-        document.getElementById("remv").classList.remove("active");
-        document.getElementById("rot").classList.remove("active");
+        buttonctrl("tri");
     }
 
     if(itemchosen === "tri") {
@@ -568,17 +518,7 @@ function drawStok() {
     }
     else{
         itemchosen = "strk";
-        let b = document.getElementById("brs1");
-        b.classList.add("active");
-        document.getElementById("cir").classList.remove("active");
-        document.getElementById("tri").classList.remove("active");
-        document.getElementById("rect").classList.remove("active");
-        document.getElementById("brs2").classList.remove("active");
-        document.getElementById("txt").classList.remove("active");
-        document.getElementById("sele").classList.remove("active");
-        document.getElementById("fill").classList.remove("active");
-        document.getElementById("remv").classList.remove("active");
-        document.getElementById("rot").classList.remove("active");
+        buttonctrl("brs1");
     }
 
     if(itemchosen === "strk") {
@@ -651,17 +591,7 @@ function drawStok2() {
     }
     else{
         itemchosen = "strk2";
-        let b = document.getElementById("brs2");
-        b.classList.add("active");
-        document.getElementById("cir").classList.remove("active");
-        document.getElementById("tri").classList.remove("active");
-        document.getElementById("brs1").classList.remove("active");
-        document.getElementById("rect").classList.remove("active");
-        document.getElementById("txt").classList.remove("active");
-        document.getElementById("sele").classList.remove("active");
-        document.getElementById("fill").classList.remove("active");
-        document.getElementById("remv").classList.remove("active");
-        document.getElementById("rot").classList.remove("active");
+        buttonctrl("brs2");
     }
 
     if(itemchosen === "strk2") {
@@ -762,17 +692,7 @@ function txt() {
     }
     else{
         itemchosen = "txt";
-        let b = document.getElementById("txt");
-        b.classList.add("active");
-        document.getElementById("cir").classList.remove("active");
-        document.getElementById("tri").classList.remove("active");
-        document.getElementById("brs1").classList.remove("active");
-        document.getElementById("brs2").classList.remove("active");
-        document.getElementById("rect").classList.remove("active");
-        document.getElementById("sele").classList.remove("active");
-        document.getElementById("fill").classList.remove("active");
-        document.getElementById("remv").classList.remove("active");
-        document.getElementById("rot").classList.remove("active");
+        buttonctrl("txt");
     }
 
     if(itemchosen === "txt") {
@@ -837,17 +757,7 @@ function remv() {
     }
     else{
         itemchosen = "remv";
-        let b = document.getElementById("remv");
-        b.classList.add("active");
-        document.getElementById("cir").classList.remove("active");
-        document.getElementById("tri").classList.remove("active");
-        document.getElementById("brs1").classList.remove("active");
-        document.getElementById("brs2").classList.remove("active");
-        document.getElementById("txt").classList.remove("active");
-        document.getElementById("rect").classList.remove("active");
-        document.getElementById("fill").classList.remove("active");
-        document.getElementById("sele").classList.remove("active");
-        document.getElementById("rot").classList.remove("active");
+        buttonctrl("remv");
     }
     
     if(itemchosen === "remv") {
@@ -1020,17 +930,7 @@ function rotation() {
     }
     else{
         itemchosen = "rot";
-        let b = document.getElementById("rot");
-        b.classList.add("active");
-        document.getElementById("cir").classList.remove("active");
-        document.getElementById("tri").classList.remove("active");
-        document.getElementById("brs1").classList.remove("active");
-        document.getElementById("brs2").classList.remove("active");
-        document.getElementById("txt").classList.remove("active");
-        document.getElementById("rect").classList.remove("active");
-        document.getElementById("fill").classList.remove("active");
-        document.getElementById("remv").classList.remove("active");
-        document.getElementById("sele").classList.remove("active");
+        buttonctrl("rot");
     }
     if(itemchosen === "rot") {
         canvas.style.cursor = "grab";

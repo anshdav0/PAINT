@@ -341,3 +341,17 @@ function theme() {
 }
 
 
+function buttonctrl(item) {
+        document.getElementById("cir").classList.remove("active");
+        document.getElementById("tri").classList.remove("active");
+        document.getElementById("rect").classList.remove("active");
+        document.getElementById("brs1").classList.remove("active");
+        document.getElementById("brs2").classList.remove("active");
+        document.getElementById("txt").classList.remove("active");
+        document.getElementById("sele").classList.remove("active");
+        document.getElementById("fill").classList.remove("active");
+        document.getElementById("remv").classList.remove("active");
+        document.getElementById("rot").classList.remove("active");
+        document.getElementById(item).classList.add("active");
+
+}
