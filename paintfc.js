@@ -121,6 +121,22 @@ function drawElement(el) {
         ctx.fillText(el.content, el.x, el.y);
     }
 
+    else if (el.type === "img") {
+        const img = new Image();
+        img.src = el.content;
+        img.onload = () => {
+            ctx.lineWidth = el.lineWid;
+            ctx.save();
+            ctx.translate(el.centrex, el.centrey);
+            ctx.rotate(el.angle);
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(-el.width/2, -el.height/2, el.width, el.height);
+            ctx.drawImage(img, -el.width/2, -el.height/2, el.width, el.height);
+            ctx.restore();
+        };
+        console.log(history);
+    }
+
     
 }
 
@@ -160,6 +176,9 @@ window.addEventListener("keydown", (e) => {
     }
     if (e.key === "s" && !e.ctrlKey && !keyshort) {
         remv();
+    }
+    if (e.key === "i" && !e.ctrlKey && !keyshort) {
+        img();
     }
     if (e.key === "f" && !keyshort) {
         fillcolr();
@@ -208,6 +227,9 @@ function position_finder(el, px, py) {
         const wid = ctx.measureText(el.content).width;
         const hei = el.fontSize * 16;
         return(px >= el.x && px <= el.x + wid && py >= el.y - hei && py <= el.y);
+    }
+    else if (el.type === "img") {
+        return (px >= el.x && px <= (el.x + el.width) && py >= el.y && py <= (el.y + el.height))
     }
 }
 
@@ -341,3 +363,18 @@ function theme() {
 }
 
 
+function buttonctrl(item) {
+        document.getElementById("cir").classList.remove("active");
+        document.getElementById("tri").classList.remove("active");
+        document.getElementById("rect").classList.remove("active");
+        document.getElementById("brs1").classList.remove("active");
+        document.getElementById("brs2").classList.remove("active");
+        document.getElementById("txt").classList.remove("active");
+        document.getElementById("sele").classList.remove("active");
+        document.getElementById("fill").classList.remove("active");
+        document.getElementById("remv").classList.remove("active");
+        document.getElementById("rot").classList.remove("active");
+        document.getElementById("img").classList.remove("active");
+        document.getElementById(item).classList.add("active");
+
+}
