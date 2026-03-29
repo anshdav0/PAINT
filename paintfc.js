@@ -225,6 +225,68 @@ function triarea(x1,y1,x2,y2,x3,y3) {
     return Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))/2.0);
 }
 
+let lastX = 0, lastY = 0;
+let mobile = false;
+let timestart;
+
+canvas.addEventListener("mousemove", (e) => {
+    if(!mobile){
+        lastX = e.offsetX;
+        lastY = e.offsetY;
+    }
+});
+
+canvas.addEventListener("mousedown", (e) => {
+    if(!mobile){
+        lastX = e.offsetX;
+        lastY = e.offsetY;
+    }
+});
+
+canvas.addEventListener("mouseup", (e) => {
+    if(!mobile){
+        lastX = e.offsetX;
+        lastY = e.offsetY;
+    }
+});
+
+canvas.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    timestart = Date.now();
+    mobile = true;
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    lastX = touch.clientX - rect.left;
+    lastY = touch.clientY - rect.top;
+    canvas.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+});
+
+canvas.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+    mobile = true;
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    lastX = touch.clientX - rect.left;
+    lastY = touch.clientY - rect.top;
+    canvas.dispatchEvent(new MouseEvent("mousemove", { bubbles: true }));
+});
+
+canvas.addEventListener("touchend", (e) => {
+    e.preventDefault();
+    const duration = Date.now() - timestart;
+
+    if(duration <= 200){
+        canvas.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    }
+    mobile = true;
+    const touch = e.changedTouches[0];
+    const rect = canvas.getBoundingClientRect();
+    lastX = touch.clientX - rect.left;
+    lastY = touch.clientY - rect.top;
+    canvas.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
+});
+
+
 
 function save() {
     if (undoptr >= 0){
