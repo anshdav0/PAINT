@@ -2,17 +2,12 @@
 function remv() {                           //scale/resize
     if(itemchosen === "remv"){
         selection();
+        canvas.style.cursor = "drag";
     }
     else{
         itemchosen = "remv";
         buttonctrl("remv");
-    }
-    
-    if(itemchosen === "remv") {
         canvas.style.cursor = "grab";
-    }
-    else {
-        canvas.style.cursor = "default";
     }
 }
 
@@ -177,16 +172,12 @@ addEventListener("mouseup", (e) => {
 function rotation() {               //rotation
     if(itemchosen === "rot"){
         selection();
+        canvas.style.cursor = "drag";
     }
     else{
         itemchosen = "rot";
-        buttonctrl("rot");
-    }
-    if(itemchosen === "rot") {
         canvas.style.cursor = "grab";
-    }
-    else {
-        canvas.style.cursor = "default";
+        buttonctrl("rot");
     }
 }
 
@@ -325,16 +316,12 @@ function selection() {                  //move/sele
         itemchosen = "";
         let b = document.getElementById("sele");
         b.classList.remove("active");
+        canvas.style.cursor = "grab";
     }
     else{
         itemchosen = "sel";
-        buttonctrl("sele");
-    }
-    if(itemchosen === "sel") {
-        canvas.style.cursor = "grab";
-    }
-    else {
         canvas.style.cursor = "default";
+        buttonctrl("sele");
     }
 }
 
@@ -542,4 +529,3 @@ addEventListener("mouseup", (e) => {
      
     
 })
-

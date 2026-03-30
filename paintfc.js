@@ -401,13 +401,6 @@ function savingthecurrentstate(el) {
     save();
 }
 
-history.splice(undoptr + 1);
-    renders.push(el);
-    undoptr++;
-    history.push(JSON.parse(JSON.stringify(renders)));
-    draw();
-    frame = null;
-    save();
 
 function mathsfortri(a, x, y, f){
 return (x + (a - x) * (Math.sqrt((lastX - x)**2 + (lastY - y)**2)) / f);

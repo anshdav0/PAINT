@@ -9,17 +9,12 @@ let keyshort;
 function drawRect() {           //rectangle
     if(itemchosen === "rec"){
         selection();
+        canvas.style.cursor = "drag";
     }
     else{
         itemchosen = "rec";
-        buttonctrl("rect");
-    }
-
-    if(itemchosen === "rec") {
         canvas.style.cursor = "crosshair";
-    }
-    else {
-        canvas.style.cursor = "default";
+        buttonctrl("rect");
     }
 }
 
@@ -74,17 +69,12 @@ let scircenx, scirceny;
 function drawCir() {            //circle
     if(itemchosen === "cir"){
         selection();
+        canvas.style.cursor = "drag";
     }
     else{
         itemchosen = "cir";
-        buttonctrl("cir");
-    }
-
-    if(itemchosen === "cir") {
         canvas.style.cursor = "crosshair";
-    }
-    else {
-        canvas.style.cursor = "default";
+        buttonctrl("cir");
     }
 }
 
@@ -131,16 +121,12 @@ canvas.addEventListener("mouseup", (e) => {
 function fillcolr() {                   //fillcolor
     if (itemchosen === "filc"){
         selection();
+        canvas.style.cursor = "drag";
     }
     else{
         itemchosen = "filc";
-        buttonctrl("fill");
-    }
-    if(itemchosen === "filc") {
         canvas.style.cursor = "url('Assets/bb.cur'), auto";
-    }
-    else {
-        canvas.style.cursor = "default";
+        buttonctrl("fill");
     }
 }
 
@@ -166,17 +152,12 @@ let i=0;
 function drawTri() {                                //triangle
     if(itemchosen === "tri"){
         selection();
+        canvas.style.cursor = "drag";
     }
     else{
         itemchosen = "tri";
-        buttonctrl("tri");
-    }
-
-    if(itemchosen === "tri") {
         canvas.style.cursor = "crosshair";
-    }
-    else {
-        canvas.style.cursor = "default";
+        buttonctrl("tri");
     }
 }
 
@@ -264,17 +245,12 @@ let isBrushing = false;
 function drawStok() {               //brush
     if(itemchosen === "strk"){
         selection();
+        canvas.style.cursor = "drag";
     }
     else{
         itemchosen = "strk";
-        buttonctrl("brs1");
-    }
-
-    if(itemchosen === "strk") {
         canvas.style.cursor = "crosshair";
-    }
-    else {
-        canvas.style.cursor = "default";
+        buttonctrl("brs1");
     }
 }
 
@@ -328,17 +304,12 @@ canvas.addEventListener("mouseup", (e) => {
 function drawStok2() {              //Eraser
     if(itemchosen === "strk2"){
         selection();
+        canvas.style.cursor = "drag";
     }
     else{
         itemchosen = "strk2";
-        buttonctrl("brs2");
-    }
-
-    if(itemchosen === "strk2") {
         canvas.style.cursor = "url('Assets/eraser.cur'), cell";
-    }
-    else {
-        canvas.style.cursor = "default";
+        buttonctrl("brs2");
     }
 }
 
@@ -419,17 +390,12 @@ let x1, y1;
 function txt() {                    //text
     if(itemchosen === "txt"){
         selection();
+        canvas.style.cursor = "drag";
     }
     else{
         itemchosen = "txt";
-        buttonctrl("txt");
-    }
-
-    if(itemchosen === "txt") {
         canvas.style.cursor = "text";
-    }
-    else {
-        canvas.style.cursor = "default";
+        buttonctrl("txt");
     }
 }
 
@@ -472,17 +438,12 @@ textInput.addEventListener("keydown", (e) => {
 function img() {           //image
     if(itemchosen === "img"){
         selection();
+        canvas.style.cursor = "drag";
     }
     else{
         itemchosen = "img";
-        buttonctrl("img");
-    }
-
-    if(itemchosen === "img") {
         canvas.style.cursor = "crosshair";
-    }
-    else {
-        canvas.style.cursor = "default";
+        buttonctrl("img");
     }
 }
 
